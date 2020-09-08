@@ -4,7 +4,7 @@
 #include "book.h"
 
 
-#define Book_name_size 30
+#define Book_name_size 100
 #define Book_company_size 30
 #define Book_ISBN_size 20
 #define Book_author_size 20
@@ -80,41 +80,26 @@ int Admin_mode(){                      //관리자 모드 출력 함수 ,선택 수 리턴
 	return choice;
 }
 
-void Find_author(){
-	char author[Book_author_size];
-	printf("저자명 :");
-	scanf("%s",author);
-	 
-	ttmp=Book_head->next;
-	int nu=0;
-	while(ttmp!=NULL){
-		if(strcmp(ttmp->Book_author,author)==0){
-			Book_information(ttmp);	
-			nu++;
-		}
-		ttmp_back=ttmp;
-		ttmp=ttmp->next;
-	}
-	if(nu==0){
-		printf("저자명이 %s인 도서를 찾을 수 없습니다.\n",author);
-	}else{
-		printf("\n총 %d권의 책이 검색되었습니다.\n",nu);
-	}
-}
+
  
 void add_book(){                 //도서 등록 함수 
 	Book *p=(Book *)malloc(sizeof(Book));
 	
 	printf("[ 도서 등록 ]\n");
 	printf("도서명:");
-	scanf("%s",p->Book_name);
-	printf("출판사:");
-	scanf("%s",p->Book_company);
-	printf("저자명:");
-	scanf("%s",p->Book_author);
-	printf("ISBN:");
-	scanf("%s",p->Book_ISBN);
 	getchar();
+	fgets(p->Book_name,Book_name_size,stdin);
+	Erase_enter(p->Book_name); 
+	printf("출판사:");
+	fgets(p->Book_company,Book_name_size,stdin);
+	Erase_enter(p->Book_company);
+	printf("저자명:");
+	fgets(p->Book_author,Book_name_size,stdin);
+	Erase_enter(p->Book_author);
+	printf("ISBN:");
+	fgets(p->Book_ISBN,Book_name_size,stdin);
+	Erase_enter(p->Book_ISBN);
+	
 	printf("대출가능 여부(y/n):");
 	scanf("%c",&p->Book_borrow);
 	getchar();
@@ -300,7 +285,7 @@ int Find_book(){        //[도서검색]창  ,번호 리턴
 	if(num==1){
 		Search_book_name();
 	}else if(num==2){
-		
+		Search_book_company();
 	}else if(num==3){
 		char isbn[Book_ISBN_size];
 		
@@ -314,7 +299,7 @@ int Find_book(){        //[도서검색]창  ,번호 리턴
 			Book_information(q);
 		}
 	}else if(num==4){
-		Find_author(); 
+		Search_book_author(); 
 		
 	}else if(num==5){
 		
@@ -325,6 +310,60 @@ int Find_book(){        //[도서검색]창  ,번호 리턴
 	}
 	}
 } 
+
+void Search_book_author(){   //저자명 찾아주는 함수 
+	
+	char author[Book_author_size];
+	printf("저자명 :");
+	getchar();
+	fgets(author,Book_author_size,stdin);
+	Erase_enter(author);
+	
+	ttmp=Book_head->next;
+	int nu=0;
+	
+	while(ttmp!=NULL){
+		if(Find_word(author,ttmp->Book_author)==1){
+			Book_information(ttmp);	
+			nu++;
+		}
+		ttmp_back=ttmp;
+		ttmp=ttmp->next;
+	}
+	
+	if(nu==0){
+		printf("저자명이 %s인 도서를 찾을 수 없습니다.\n",author);
+	}else{
+		printf("\n총 %d권의 책이 검색되었습니다.\n",nu);
+	}
+}
+
+void Search_book_company(){        //출판사 찾는 함수 
+	
+	char company[Book_company_size];
+	printf("출판사명 :");
+	getchar();
+	fgets(company,Book_company_size,stdin);
+	Erase_enter(company);
+	
+	ttmp=Book_head->next;
+	int nu=0;
+	
+	while(ttmp!=NULL){
+		if(Find_word(company,ttmp->Book_company)==1){
+			Book_information(ttmp);	
+			nu++;
+		}
+		ttmp_back=ttmp;
+		ttmp=ttmp->next;
+	}
+	
+	if(nu==0){
+		printf("출판사가  %s인 도서를 찾을 수 없습니다.\n",company);
+	}else{
+		printf("\n총 %d권의 책이 검색되었습니다.\n",nu);
+	}
+}
 
 void Book_information(Book *node){      //노드 주소를 받아 정보를 다 출력해주는 함수 
 	
@@ -337,14 +376,21 @@ void Book_information(Book *node){      //노드 주소를 받아 정보를 다 출력해주는 
 }
 
 
-void Search_book_name(){         //도서명 검색 함수  .수정 필요 
+void Erase_enter(char *s){  //개행문자 지워주는 함수 
+	s[strlen(s)-1]='\0';
+}
+
+void Search_book_name(){         //도서명 검색 함수 
 	char name[Book_name_size];
 	printf("책이름: ");
-	scanf("%s",name);
+	getchar();
+	fgets(name,Book_name_size,stdin);
+	Erase_enter(name);
+	
 	ttmp=Book_head->next;
 	int nu=0;
 	while(ttmp!=NULL){
-		if(strcmp(ttmp->Book_name,name)==0){
+		if(Find_word(name,ttmp->Book_name)==1){
 			Book_information(ttmp);	
 			nu++;
 		}
@@ -358,6 +404,16 @@ void Search_book_name(){         //도서명 검색 함수  .수정 필요
 	}
 	 
 } 
+
+int Find_word(char *a,char *b){       //단어 찾기 함수 
+
+	if(strstr(b,a)==NULL){
+		return 0;
+	}else{
+		return 1;
+	}
+
+}
 
 void books(){
 	ttmp=Book_head->next;
@@ -397,6 +453,7 @@ void Admin(){     //관리자모드
 		break;
 	}else{
 	  printf("1부터 8까지의 수 중 하나를 입력해 주십시오.\n");
+	  fflush(stdin); 
 	}
 		
 	
