@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "book.h"
+
+/*
 void signUp();
 void logIn();
 void Freedata();
@@ -18,6 +20,7 @@ typedef struct stNode{
 student* head;
 student* tail;
 student* member;
+*/
 
 void st_InitNode() {
 	head = (student*)malloc(sizeof(student));
