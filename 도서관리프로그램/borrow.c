@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "borrow.h"
+//#include "borrow.h"
 #include "student.h"
 #include "book.h"
-/*
+
 typedef struct borrow{
-	int num;
+	char num[20];
 	char isbn[10];
 	struct borrow* next;
 
@@ -14,10 +14,10 @@ typedef struct borrow{
 
 borrow* br_head;
 borrow* br_tail;
-*/
+
 void borrow_init(){ //대출연결리스트 초기화 함수
 	br_head=(borrow*)malloc(sizeof(borrow));
-	br_tail=head;
+	br_tail=br_head;
 	br_head->next=NULL;	
 }
                               
@@ -57,6 +57,7 @@ int confirm_isbn(){  //존재하는 isbn인지 확인하는 함수
 	}
 	return 0;
 }
+
 void add_borrowlist(){ //도서대여 연결리스트
 	borrow *new_node= (borrow*)malloc(sizeof(borrow));
 	br_tail->next = new_node;
@@ -66,7 +67,7 @@ void add_borrowlist(){ //도서대여 연결리스트
 	int a;
 	printf("[ 도서 대여 ]\n");
 	printf("  학번: ");
-	scanf("%d", &new_node->num);
+	scanf("%s", new_node->num);
 	a=confirm_stnum();
 	if (a==3)
 		return;
@@ -87,7 +88,7 @@ void save_borrow(){  //대출정보 저장
 		br_tail->next=tmp;
 		if (tail==NULL)
 			break;
-		fprintf(brfp, "%d %s\n", &tmp->num, tmp->isbn);
+		fprintf(brfp, "%s %s\n", tmp->num, tmp->isbn);
 		br_tail->next=tmp->next;
 		tmp=br_tail->next;
 		br_tail=tmp;
@@ -100,7 +101,7 @@ void delete_borrow(){	//도서반납->대출연결리스트에서 삭제
 	borrow* delnode=br_tail->next;
 	int a,b;
 	printf("학번 : ");
-	scanf("%d",&node->num);
+	scanf("%s",node->num);
 	a=confirm_stnum();  //존재하는 학번인지 확인
 	if (a==3)
 		return;
@@ -112,7 +113,7 @@ void delete_borrow(){	//도서반납->대출연결리스트에서 삭제
 		return;
 	
 	while(1){  //삭제할 노드 탐색
-	if(int strcmp(node->num,delnode->num) == 0 && strcmp(node->isbn, delnode->isbn)==0){
+	if(strcmp(node->num,delnode->num) == 0 && strcmp(node->isbn, delnode->isbn)==0){
 		br_tail=delnode->next;//노드삭제
 		free(delnode);
 		printf("반납되었습니다.");
@@ -125,7 +126,7 @@ void delete_borrow(){	//도서반납->대출연결리스트에서 삭제
 	else{
 		br_tail->next=delnode->next;
         delnode=br_tail->next;
-        tail=delnode;
+        br_tail=delnode;
 	}
 	}
 }
@@ -153,8 +154,8 @@ char find_mylist(){  //학번으로 내 대여목록 찾은 후 isbn반환
 
 int main() {
 	borrow_init();
-	confirm_stnum;
-	confirm_isbn;
+//	confirm_stnum;
+//	confirm_isbn;
 	add_borrowlist();
 	save_borrow();
 	delete_borrow();
