@@ -57,7 +57,6 @@ int confirm_isbn(){  //존재하는 isbn인지 확인하는 함수
 	}
 	return 0;
 }
-
 void add_borrowlist(){ //도서대여 연결리스트
 	borrow *new_node= (borrow*)malloc(sizeof(borrow));
 	br_tail->next = new_node;

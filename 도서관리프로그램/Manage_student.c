@@ -2,23 +2,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-void signUp();
-void logIn();
-void Freedata();
+#include "student.h"
 
+/*
 typedef struct stNode{
 	struct stNode* next;
 	char stnum[20];
 	char passward[20];
 	char name[20];
-	char lend;
 }student;
+*/
 
 student* head;
 student* tail;
 student* member;
 
-void InitNode() {
+void st_InitNode() {
 	head = (student*)malloc(sizeof(student));
 	if (head == NULL)
 		return;
@@ -33,7 +32,7 @@ void Import_studentData() {
 		student* tmp = (student*)malloc(sizeof(student));
 		if (tmp == NULL)
 			return;
-		ret = fscanf(stfp, "%s %s %s %c", tmp->stnum, tmp->passward, tmp->name, &tmp->lend);
+		ret = fscanf(stfp, "%s %s %s", tmp->stnum, tmp->passward, tmp->name);
 		if (ret == EOF) break;
 	tmp->next = head->next;
 	head->next = tmp;
@@ -46,13 +45,13 @@ int main() {
 	FILE* stfp = fopen("student.txt", "w");
 	fclose(stfp);
 
-	InitNode();
+	st_InitNode();
 	Import_studentData();
 	while (1) {
-		printf("\n[µµ¼­°ü¼­ºñ½º]\n\
-1.È¸¿ø°¡ÀÔ\n\
-2.·Î±×ÀÎ\n\
-3.Á¾·á\n\
+		printf("\n[ë„ì„œê´€ì„œë¹„ìŠ¤]\n\
+1.íšŒì›ê°€ì…\n\
+2.ë¡œê·¸ì¸\n\
+3.ì¢…ë£Œ\n\
 -----------------\n");
 		m = scanf("%d", &menu);
 		if (menu == 1)
@@ -71,56 +70,73 @@ void signUp() {
 	student* newstudent = (student*)malloc(sizeof(student));
 	if (newstudent == 0)
 		return;
-	printf("ÇĞ¹ø : ");
+	printf("í•™ë²ˆ : ");
 	m=scanf("%s", newstudent->stnum);
-	printf("ºñ¹Ğ¹øÈ£ : ");
+	printf("ë¹„ë°€ë²ˆí˜¸ : ");
 	m=scanf("%s", newstudent->passward);
-	printf("ÀÌ¸§ : ");
+	printf("ì´ë¦„ : ");
 	m=scanf("%s", newstudent->name);
-	newstudent->lend = 'N';
 	newstudent->next = head->next;
 	head->next = newstudent;
 }
 
 void logIn() {
 	int m, loginError = 0, loginMenu;
-	char studentNUM[20] = { 0 }, PW[20] = { 0 };
-	while(1){
-		student* tmp = head->next;
-		printf("ÇĞ¹ø : ");
-		m = scanf("%s", studentNUM);
-		while (member != NULL) {
-			if (strcmp(studentNUM, member->stnum) != 0)
-				member = member->next;
-			else if (member->next == NULL)
+	char studentNUM[20] = { 0 }, PW[20] = { 0 }, i=1;
+	while (i){
+/// ë¡œê·¸ì¸ ///
+		member = head->next;
+			printf("í•™ë²ˆ : ");
+			m = scanf("%s", studentNUM);
+			printf("ë¹„ë°€ë²ˆí˜¸ : ");
+			m = scanf("%s", PW);
+
+		do {
+				if (member == NULL) {
+					loginError = 1;
+					break;
+				}
+			if (strcmp(studentNUM, member->stnum) == 0) {
+				if (strcmp(PW, member->passward) == 0) {
+					loginError = 0;
+					i = 0;
+					break;
+				}
+				else {
+					loginError = 1;
+					if (member->next != NULL)
+						continue;
+				}
+			}
+			else{
 				loginError = 1;
-			else
-				break;
-		}
-		printf("ºñ¹Ğ¹øÈ£ : ");
-		m = scanf("%s", PW);
-		if (strcmp(PW, member->passward) == 0)
-			;
-		else
-			loginError = 1;
-	
+				if (member->next != NULL)
+					continue;
+			}
+			member = member->next;
+		} while (member != NULL);
+
+/// ë¡œê·¸ì¸ ì‹¤íŒ¨ì‹œ ///
 		if (loginError == 1) {
 			printf("\
-	ERROR : ·Î±×ÀÎ ½ÇÆĞ\n\
-	1. ´Ù½Ã ·Î±×ÀÎ\n\
-	2. ¸ŞÀÎÀ¸·Î µ¹¾Æ°¡±â\n\
-	3. È¸¿ø°¡ÀÔ\n\
-	---------------------------\n");
-			m = scanf("%d", loginMenu);
+ERROR : ë¡œê·¸ì¸ ì‹¤íŒ¨\n\
+1. ë‹¤ì‹œ ë¡œê·¸ì¸\n\
+2. ë©”ì¸ìœ¼ë¡œ ëŒì•„ê°€ê¸°\n\
+3. íšŒì›ê°€ì…\n\
+---------------------------\n");
+			m = scanf("%d", &loginMenu);
 			if (loginMenu == 1)
-				;
+				continue;
 			else if (loginMenu == 2)
 				return;
-			else if (loginMenu == 3)
+			else if (loginMenu == 3) {
 				signUp();
+				break;
+			}
 		}
+		//ë¡œê·¸ì¸ ì„±ê³µ->ë„ì„œ ê´€ë¦¬ë¡œ ë„˜ì–´ê°€ê¸°
 		else if (loginError == 0)
-			;
+			break;
 	}
 }
 void Freedata() {
