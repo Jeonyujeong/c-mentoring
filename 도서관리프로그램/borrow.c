@@ -21,20 +21,20 @@ void borrow_init(){ //대출연결리스트 초기화 함수
 	br_head->next=NULL;	
 }
                               
-int confirm_stnum( ){  // 존재하는 학번인지 확인하는 함수
-	borrow *cf_node;
-	br_tail->next=cf_node;
+int confirm_stnum(char *st_num ){  // 존재하는 학번인지 확인하는 함수
+	student *cf_node;
+	cf_node=head;
 
 	while(1){
-		if(cf_node->num == member->stnum )
+		 if( cf_node->next  == NULL){
+             printf("존재하지 않는 학번입니다.");
+             return 3;
+             }
+
+		if(!strcmp(cf_node->stnum,st_num))
 			break;
-		tail->next=member->next;
-		member=tail->next;
-		tail=member;
-		if( tail  == NULL){
-			printf("존재하지 않는 학번입니다.");
-			return 3;
-		}
+
+		cf_node=cf_node->next;
 	}
 	return 0;
 }
@@ -68,7 +68,7 @@ void add_borrowlist(){ //도서대여 연결리스트
 	printf("[ 도서 대여 ]\n");
 	printf("  학번: ");
 	scanf("%s", new_node->num);
-	a=confirm_stnum();
+	a=confirm_stnum(new_node->num);
 	if (a==3)
 		return;
 
