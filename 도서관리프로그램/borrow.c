@@ -14,7 +14,7 @@ borrow* tail;
 void init(){
 	head=(borrow*)malloc(sizeof(borrow));
 	tail=head;
-	head->next=NULL;	
+	head->next=NULL;
 }
 
 void add(){
@@ -24,7 +24,7 @@ void add(){
 	printf("  학번: ");
 	scanf("%d", &new_node->num);
 	printf("  ISBN: ");
-	scanf("%s", new_node->isbn);	
+	scanf("%s", new_node->isbn);
 	tail->next = new_node;
 	tail= new_node;
 	tail->next = NULL;
@@ -41,7 +41,7 @@ void save(){
 }
 
 int main() {
-	
+
 	init();
 	add();
 	save();

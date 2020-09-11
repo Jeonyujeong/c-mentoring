@@ -13,3 +13,5 @@ void signUp();
 void logIn();
 void Freedata();
 void node_print();
+void st_InitNode();
+void Import_studentData();

@@ -2,25 +2,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "book.h"
+#include "student.h"
 
 /*
-void signUp();
-void logIn();
-void Freedata();
-void node_print();
-
 typedef struct stNode{
 	struct stNode* next;
 	char stnum[20];
 	char passward[20];
 	char name[20];
 }student;
+*/
 
 student* head;
 student* tail;
 student* member;
-*/
 
 void st_InitNode() {
 	head = (student*)malloc(sizeof(student));
@@ -49,9 +44,6 @@ int main() {
 	int menu=0, m;
 	FILE* stfp = fopen("student.txt", "w");
 	fclose(stfp);
-
-	bk_init();
-	Login();
 
 	st_InitNode();
 	Import_studentData();
@@ -86,14 +78,6 @@ void signUp() {
 	m=scanf("%s", newstudent->name);
 	newstudent->next = head->next;
 	head->next = newstudent;
-	node_print();
-}
-
-void node_print() {
-	student* tmp = head;
-	while(tmp->next!=NULL) {
-		printf("%s", tmp->name);
-	}
 }
 
 void logIn() {
