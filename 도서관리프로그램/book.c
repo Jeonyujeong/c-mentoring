@@ -461,7 +461,7 @@ void Admin(){     //�����ڸ���
 }
 }
 
-
+/*
 int main(){
 
 	bk_init();
@@ -470,3 +470,4 @@ int main(){
 
 	return 0;
 }
+*/
