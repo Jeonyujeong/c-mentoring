@@ -11,11 +11,11 @@ typedef struct stNode{
 	char passward[20];
 	char name[20];
 }student;
-*/
 
 student* head;
 student* tail;
 student* member;
+*/
 
 void st_InitNode() {
 	head = (student*)malloc(sizeof(student));
@@ -39,7 +39,7 @@ void Import_studentData() {
 	}
 	fclose(stfp);
 }
-
+/*
 int main() {
 	int menu=0, m;
 	FILE* stfp = fopen("student.txt", "w");
@@ -64,7 +64,7 @@ int main() {
 	Freedata();
 	return 0;
 }
-
+*/
 void signUp() {
 	int m;
 	student* newstudent = (student*)malloc(sizeof(student));
