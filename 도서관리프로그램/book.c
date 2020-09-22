@@ -441,7 +441,7 @@ void Admin(){     //관리자모드
 }
 }
 
-
+/*
 int main(){
 	
 	bk_init();
@@ -450,3 +450,4 @@ int main(){
 
 	return 0;
 }
+*/
