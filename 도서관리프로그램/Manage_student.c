@@ -2,29 +2,33 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "student.h"
+#include "book.h"
 
-/*
-typedef struct stNode{
-	struct stNode* next;
+
+void signUp();
+void logIn();
+void SuccessLogin_menu();
+void StudentFreedata();
+
+typedef struct student{
+	struct student* next;
 	char stnum[20];
 	char passward[20];
 	char name[20];
 }student;
 
-student* head;
-student* tail;
+student* SThead;
 student* member;
-*/
 
 void st_InitNode() {
-	head = (student*)malloc(sizeof(student));
-	if (head == NULL)
+	SThead = (student*)malloc(sizeof(student));
+	if (SThead == NULL)
 		return;
-	head->next = NULL;
-	member = head->next;
-	tail = head;
+	SThead->next = NULL;
+	member = SThead->next;
 }
+
+//ÇÐ»ý Á¤º¸ (¸®½ºÆ®·Î) °¡Á®¿À±â
 void Import_studentData() {
 	FILE* stfp = fopen("student.txt", "r");
 	int ret = 0;
@@ -34,95 +38,113 @@ void Import_studentData() {
 			return;
 		ret = fscanf(stfp, "%s %s %s", tmp->stnum, tmp->passward, tmp->name);
 		if (ret == EOF) break;
-	tmp->next = head->next;
-	head->next = tmp;
+	tmp->next = SThead->next;
+	SThead->next = tmp;
 	}
 	fclose(stfp);
 }
-/*
+
+void Update_studentData() {   //¸®½ºÆ®¿¡¼­ ÆÄÀÏ·Î ÀÔ·ÂÇØÁÖ´Â ÇÔ¼ö 
+	FILE* fp = fopen("bk.txt", "w");
+	student* tmp = (student*)malloc(sizeof(student));
+	tmp = SThead->next;
+	while (tmp != NULL) {
+		fprintf(fp, "%s %s %s", tmp->stnum, tmp->passward, tmp->name);
+		tmp = tmp->next;
+	}
+	fclose(fp);
+}
+
 int main() {
 	int menu=0, m;
 	FILE* stfp = fopen("student.txt", "w");
 	fclose(stfp);
 
+	bk_init();
 	st_InitNode();
 	Import_studentData();
+	Book_load();
 	while (1) {
-		printf("\n[ë„ì„œê´€ì„œë¹„ìŠ¤]\n\
-1.íšŒì›ê°€ìž…\n\
-2.ë¡œê·¸ì¸\n\
-3.ì¢…ë£Œ\n\
+		printf("\n[µµ¼­°ü¼­ºñ½º]\n\
+1.È¸¿ø°¡ÀÔ\n\
+2.·Î±×ÀÎ\n\
+3.Á¾·á\n\
 -----------------\n");
 		m = scanf("%d", &menu);
 		if (menu == 1)
 			signUp();
 		else if (menu == 2)
 			logIn();
-		else if (menu == 3)
+		else if (menu == 3) {
+			printf("===ÇÁ·Î±×·¥ Á¾·á===");
 			break;
+		}
 	}
-	Freedata();
+	StudentFreedata();
 	return 0;
 }
-*/
+
+// È¸¿ø°¡ÀÔ
 void signUp() {
 	int m;
 	student* newstudent = (student*)malloc(sizeof(student));
 	if (newstudent == 0)
 		return;
-	printf("í•™ë²ˆ : ");
+	printf("ÇÐ¹ø : ");
 	m=scanf("%s", newstudent->stnum);
-	printf("ë¹„ë°€ë²ˆí˜¸ : ");
+	printf("ºñ¹Ð¹øÈ£ : ");
 	m=scanf("%s", newstudent->passward);
-	printf("ì´ë¦„ : ");
+	printf("ÀÌ¸§ : ");
 	m=scanf("%s", newstudent->name);
-	newstudent->next = head->next;
-	head->next = newstudent;
+	newstudent->next = SThead->next;
+	SThead->next = newstudent;
+	Update_studentData();
 }
 
+// ·Î±×ÀÎ
 void logIn() {
-	int m, loginError = 0, loginMenu;
+	int m, loginError = 1, loginMenu;
 	char studentNUM[20] = { 0 }, PW[20] = { 0 }, i=1;
 	while (i){
-/// ë¡œê·¸ì¸ ///
-		member = head->next;
-			printf("í•™ë²ˆ : ");
-			m = scanf("%s", studentNUM);
-			printf("ë¹„ë°€ë²ˆí˜¸ : ");
-			m = scanf("%s", PW);
+		member = SThead->next;
+		printf("ÇÐ¹ø : ");
+		m = scanf("%s", studentNUM);
+		printf("ºñ¹Ð¹øÈ£ : ");
+		m = scanf("%s", PW);
 
 		do {
-				if (member == NULL) {
-					loginError = 1;
-					break;
-				}
-			if (strcmp(studentNUM, member->stnum) == 0) {
-				if (strcmp(PW, member->passward) == 0) {
-					loginError = 0;
-					i = 0;
-					break;
-				}
-				else {
-					loginError = 1;
-					if (member->next != NULL)
-						continue;
-				}
-			}
-			else{
-				loginError = 1;
-				if (member->next != NULL)
-					continue;
-			}
 			member = member->next;
+			if (member == NULL) 
+				break;
+
+			if (strcmp(studentNUM, member->stnum) == 0 && strcmp(PW, member->passward) == 0) {
+				//ÇÐ¹ø & ºñ¹ø ÀÏÄ¡
+					i = 0;	loginError = 0;
+					SuccessLogin_menu();
+					break;
+			}
+
+			else if (strcmp(studentNUM, "admin") == 0 && strcmp(PW, "admin") == 0) {
+			//°ü¸®ÀÚ ¸ðµå
+					i = 0;	loginError = 0;
+					Admin();
+					break;
+			}
+
+			else{
+			//ÇÐ¹ø or ºñ¹ø ÀÏÄ¡X
+				if (member->next != NULL)
+				continue;
+			}
 		} while (member != NULL);
 
-/// ë¡œê·¸ì¸ ì‹¤íŒ¨ì‹œ ///
+// ·Î±×ÀÎ ½ÇÆÐ½Ã
 		if (loginError == 1) {
 			printf("\
-ERROR : ë¡œê·¸ì¸ ì‹¤íŒ¨\n\
-1. ë‹¤ì‹œ ë¡œê·¸ì¸\n\
-2. ë©”ì¸ìœ¼ë¡œ ëŒì•„ê°€ê¸°\n\
-3. íšŒì›ê°€ìž…\n\
+ERROR : ·Î±×ÀÎ ½ÇÆÐ\n\
+1. ´Ù½Ã ·Î±×ÀÎ\n\
+2. ¸ÞÀÎÀ¸·Î µ¹¾Æ°¡±â\n\
+3. È¸¿ø°¡ÀÔ\n\
 ---------------------------\n");
 			m = scanf("%d", &loginMenu);
 			if (loginMenu == 1)
@@ -134,11 +156,46 @@ ERROR : ë¡œê·¸ì¸ ì‹¤íŒ¨\n\
 				break;
 			}
 		}
-		//ë¡œê·¸ì¸ ì„±ê³µ->ë„ì„œ ê´€ë¦¬ë¡œ ë„˜ì–´ê°€ê¸°
 		else if (loginError == 0)
 			break;
 	}
 }
-void Freedata() {
 
+void SuccessLogin_menu() {
+	int SLmenu, BookReturn;
+	printf("\n\
+[¸ñ·Ï]\n\
+1. µµ¼­ °Ë»ö\n\
+2. ³» ´ë¿© ¸ñ·Ï\n\
+3. È¸¿ø Å»Åð\n\
+4. ·Î±×¾Æ¿ô\n\
+5. ÇÁ·Î±×·¥ Á¾·á\n");
+	int m = scanf("%d", &SLmenu);
+	if (SLmenu == 1)
+		BookReturn = Find_book();
+	else if (SLmenu == 2)
+		//³» ´ë¿© ¸ñ·Ï Ã£´Â ÇÔ¼ö Ãß°¡
+		;
+	else if (SLmenu == 3)
+		//È¸¿ø Å»Åð ÇÔ¼ö Ãß°¡(´ëÃâ ¸ñ·Ï¿¡ ÀÌ¸§ ÀÖÀ¸¸é ºÒ°¡, »èÁ¦ ÈÄ txtÆÄÀÏ ¾÷µ¥ÀÌÆ®)
+		Update_studentData();
+	else if (SLmenu == 4)
+		return;
+	else if (SLmenu == 5){
+		StudentFreedata();
+		exit(-1);
+	}
+}
+
+void StudentFreedata() {
+	Update_studentData();
+	student* tmp;
+	while (SThead->next != NULL) {
+		tmp = SThead;
+		if (tmp->next == NULL)
+			free(tmp);
+		else
+			tmp = tmp->next;
+	}
+	free(SThead);
 }
