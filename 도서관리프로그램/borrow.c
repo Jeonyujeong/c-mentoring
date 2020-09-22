@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "book.h"
+#include "student.h"
 
 typedef struct borrow{
 	int num;
@@ -8,13 +10,13 @@ typedef struct borrow{
 
 }borrow;
 
-borrow* head;
+borrow* stHead;
 borrow* tail;
 
 void init(){
-	head=(borrow*)malloc(sizeof(borrow));
-	tail=head;
-	head->next=NULL;
+	stHead=(borrow*)malloc(sizeof(borrow));
+	tail=stHead;
+	stHead->next=NULL;
 }
 
 void add(){
