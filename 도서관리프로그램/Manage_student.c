@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "student.h"
+// #include "student.h"
 #include "book.h"
 
 
@@ -20,6 +20,10 @@ typedef struct stNode{
 
 student* stHead;
 student* member;
+
+void myflush() {
+	while(getchar() != '\n');
+}
 
 void st_InitNode() {
 	stHead = (student*)malloc(sizeof(student));
@@ -61,6 +65,7 @@ int main() {
 	FILE* stfp = fopen("student.txt", "w");
 	fclose(stfp);
 
+	bk_init();
 	st_InitNode();
 	Import_studentData();
 	Book_load();
@@ -70,6 +75,7 @@ int main() {
 2.로그인\n\
 3.종료\n\
 -----------------\n");
+
 		m = scanf("%d", &menu);
 		if (menu == 1)
 			signUp();
@@ -91,11 +97,11 @@ void signUp() {
 	if (newstudent == 0)
 		return;
 	printf("학번 : ");
-	m=scanf("%s", newstudent->stnum);
+	m=scanf("%s", newstudent->stnum); myflush();
 	printf("비밀번호 : ");
-	m=scanf("%s", newstudent->passward);
+	m=scanf("%s", newstudent->passward);myflush();
 	printf("이름 : ");
-	m=scanf("%s", newstudent->name);
+	m=scanf("%s", newstudent->name);myflush();
 	newstudent->next = stHead->next;
 	stHead->next = newstudent;
 	Update_studentData();
@@ -108,9 +114,18 @@ void logIn() {
 	while (i){
 		member = stHead->next;
 		printf("학번 : ");
-		m = scanf("%s", studentNUM);
+		m = scanf("%s", studentNUM);myflush();
 		printf("비밀번호 : ");
-		m = scanf("%s", PW);
+		m = scanf("%s", PW);myflush();
+
+		printf("%s, %s\n", studentNUM, PW);
+		/*
+		학번 = studentNUM, 비밀번호 = PW 로 입력 받음.
+		member에 저장하는 부분없음 -> 계속 로그인 실패
+
+		do while 문을 사용하긴 했지만 그냥 while문 사용해되 될듯해
+		if - break 문이 있기 때문에 while 문에 조건을 안써도 됨.
+		*/
 
 		do {
 			member = member->next;
@@ -183,7 +198,7 @@ void SuccessLogin_menu() {
 		return;
 	else if (SLmenu == 5){
 		StudentFreedata();
-		exit(-1);
+		exit(1);
 	}
 }
 
