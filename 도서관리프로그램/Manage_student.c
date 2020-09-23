@@ -7,7 +7,7 @@
 void signUp();
 void logIn();
 void SuccessLogin_menu();
-void StudentFreedata();
+void student_free();
 void MainMenu();
 int FailLogin_menu();
 
@@ -60,10 +60,6 @@ void Update_studentData() {   //리스트에서 파일로 입력해주는 함수
 }
 
 int main() {
-	//student.txt 파일 생성(오류 방지)
-	FILE* stfp = fopen("student.txt", "w");
-	fclose(stfp);
-
 //	Book_load();
 //	bk_init();
 
@@ -94,8 +90,8 @@ void MainMenu(){
 			break;
 		}
 	}
-	StudentFreedata();
-	printf("===프로그램 종료===");
+	student_free();
+	printf("===프로그램 종료===\n");
 }
 
 // 회원가입
@@ -114,7 +110,7 @@ void signUp() {
 	while(tmp->next != NULL){
 		tmp=tmp->next;
 		if(newstudent->stnum == tmp->stnum){
-			printf("이미 가입된 학번입니다.");
+			printf("이미 가입된 학번입니다.\n");
 			return;
 		}
 	}
@@ -234,24 +230,20 @@ void SuccessLogin_menu() {
 		return;
 	}
 	else if (SLmenu == 5){
-		StudentFreedata();
+		student_free();
+		printf("====프로그램 종료====\n");
 		exit(0);
 	}
 }
 
-void StudentFreedata() {
-//	Update_studentData();
-	printf("데이터 free 함수");
-	while (SThead != NULL){
-		student* tmp = SThead;
-		while(tmp->next != NULL){
-			free(tmp);
-			printf("free");
-			continue;
-		}
-		tmp = tmp->next;
-		tmp = NULL;
+void student_free() {
+	student *tmp = SThead;
+	while (tmp != NULL){
+		SThead = SThead->next;
+		free(tmp);
+		tmp = SThead;
 	}
+	tmp = NULL;
 	SThead = NULL;
 	member = NULL;
 }
