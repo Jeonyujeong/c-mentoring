@@ -1,36 +1,36 @@
-#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-// #include "student.h"
-#include "book.h"
+
+//#include "book.h"
 
 
 void signUp();
 void logIn();
 void SuccessLogin_menu();
-void StudentFreedata();
+void student_free();
+void MainMenu();
+int FailLogin_menu();
 
-typedef struct stNode{
-	struct stNode* next;
+typedef struct student{
+	struct student* next;
+
 	char stnum[20];
 	char passward[20];
 	char name[20];
 }student;
 
-student* stHead;
+
+student* SThead;
 student* member;
 
-void myflush() {
-	while(getchar() != '\n');
-}
-
 void st_InitNode() {
-	stHead = (student*)malloc(sizeof(student));
-	if (stHead == NULL)
+	SThead = (student*)malloc(sizeof(student));
+	if (SThead == NULL)
 		return;
-	stHead->next = NULL;
-	member = stHead->next;
+	SThead->next = NULL;
+	member = SThead;
+
 }
 
 //학생 정보 (리스트로) 가져오기
@@ -41,141 +41,177 @@ void Import_studentData() {
 		student* tmp = (student*)malloc(sizeof(student));
 		if (tmp == NULL)
 			return;
-		ret = fscanf(stfp, "%s %s %s", tmp->stnum, tmp->passward, tmp->name);
+		ret = fscanf(stfp, "%s %s %s\n", tmp->stnum, tmp->passward, tmp->name);
 		if (ret == EOF) break;
-	tmp->next = stHead->next;
-	stHead->next = tmp;
+		printf("import");
+		tmp->next = SThead->next;
+		SThead->next = tmp;	
+		tmp = NULL;
 	}
 	fclose(stfp);
 }
 
-void Update_studentData() {   //리스트에서 파일로 입력해주는 함수
-	FILE* fp = fopen("bk.txt", "w");
-	student* tmp = (student*)malloc(sizeof(student));
-	tmp = stHead->next;
-	while (tmp != NULL) {
-		fprintf(fp, "%s %s %s", tmp->stnum, tmp->passward, tmp->name);
-		tmp = tmp->next;
+
+void Update_studentData() {   //리스트에서 파일로 입력해주는 함수 
+	FILE* fp = fopen("student.txt", "w");
+	student* tmp = SThead;
+	while (1) {
+		tmp= tmp->next;
+		if(tmp == NULL) break;
+		fprintf(fp, "%s %s %s\n", tmp->stnum, tmp->passward, tmp->name);
+		printf("Update");
 	}
 	fclose(fp);
 }
-/*
-int main() {
-	int menu=0, m;
-	FILE* stfp = fopen("student.txt", "w");
-	fclose(stfp);
 
-	bk_init();
+
+int main() {
+//	Book_load();
+//	bk_init();
+
+	//기본 셋팅(학생)
 	st_InitNode();
 	Import_studentData();
-	Book_load();
+	
+	//시작메뉴
+	MainMenu();
+	return 0;
+}
+
+void MainMenu(){
+	int menu=0;
 	while (1) {
-		printf("\n[도서관서비스]\n\
+		printf("\n\
+[도서관서비스]\n\
 1.회원가입\n\
 2.로그인\n\
 3.종료\n\
 -----------------\n");
-
-		m = scanf("%d", &menu);
+		scanf("%d", &menu);
 		if (menu == 1)
 			signUp();
 		else if (menu == 2)
 			logIn();
 		else if (menu == 3) {
-			printf("===프로그램 종료===");
 			break;
 		}
 	}
-	StudentFreedata();
-	return 0;
+	student_free();
+	printf("===프로그램 종료===\n");
 }
-*/
 
 // 회원가입
 void signUp() {
 	int m;
 	student* newstudent = (student*)malloc(sizeof(student));
-	if (newstudent == 0)
+	student* tmp = SThead;
+	if (newstudent == NULL || tmp == NULL)
 		return;
 	printf("학번 : ");
 	m=scanf("%s", newstudent->stnum); myflush();
 	printf("비밀번호 : ");
 	m=scanf("%s", newstudent->passward);myflush();
 	printf("이름 : ");
-	m=scanf("%s", newstudent->name);myflush();
-	newstudent->next = stHead->next;
-	stHead->next = newstudent;
+	m=scanf("%s", newstudent->name);
+	while(tmp->next != NULL){
+		tmp=tmp->next;
+		if(newstudent->stnum == tmp->stnum){
+			printf("이미 가입된 학번입니다.\n");
+			return;
+		}
+	}
+	newstudent->next = SThead->next;
+	SThead->next = newstudent;
 	Update_studentData();
-}
+	
+	////////리스트 확인 코드/////////	
+	tmp = SThead;
+	while(tmp->next != NULL){
+		tmp = tmp->next;
+		printf("%s\n", tmp->stnum);
+	}
+	///////////////////////////////
+
+	tmp = NULL;
+	newstudent = NULL;
+}	
 
 // 로그인
 void logIn() {
-	int m, loginError = 1, loginMenu;
-	char studentNUM[20] = { 0 }, PW[20] = { 0 }, i=1;
+	int FLMenu, loginError = 1;
+	char studentNUM[20] = { 0 }, PW[20] = { 0 };
+	_Bool i=1;
 	while (i){
-		member = stHead->next;
+		//member = SThead->next; ==> member = SThead;
+		member = SThead;
 		printf("학번 : ");
-		m = scanf("%s", studentNUM);myflush();
+		scanf("%s", studentNUM);
 		printf("비밀번호 : ");
-		m = scanf("%s", PW);myflush();
-
-		printf("%s, %s\n", studentNUM, PW);
-		/*
-		학번 = studentNUM, 비밀번호 = PW 로 입력 받음.
-		member에 저장하는 부분없음 -> 계속 로그인 실패
-
-		do while 문을 사용하긴 했지만 그냥 while문 사용해되 될듯해
-		if - break 문이 있기 때문에 while 문에 조건을 안써도 됨.
-		*/
+		scanf("%s", PW);
 
 		do {
 			member = member->next;
-			if (member == NULL)
+			if (member == NULL) 
 				break;
 
-			if (strcmp(studentNUM, member->stnum) == 0 && strcmp(PW, member->passward) == 0) {
+			if ((strcmp(studentNUM, member->stnum)) == 0 && (strcmp(PW, member->passward) == 0)) {
 				//학번 & 비번 일치
 					i = 0;	loginError = 0;
 					SuccessLogin_menu();
 					break;
 			}
 
-			else if (strcmp(studentNUM, "admin") == 0 && strcmp(PW, "admin") == 0) {
+			else if ((strcmp(studentNUM, "admin")) == 0 && (strcmp(PW, "admin") == 0)) {
 			//관리자 모드
 					i = 0;	loginError = 0;
-					Admin();
+//					Admin();
 					break;
 			}
 
-			else{
-			//학번 or 비번 일치X
-				if (member->next != NULL)
+		else{
+		//학번 or 비번 일치X
+			//+비교할 학생 데이터 남아있을 때
+			if (member->next != NULL)
 				continue;
-			}
+			else
+				break;
+		}
 		} while (member != NULL);
 
 // 로그인 실패시
-		if (loginError == 1) {
-			printf("\
+		if (loginError == 1){
+			FLMenu = FailLogin_menu();
+			if (FLMenu == 1)
+
+				continue;
+			else if (FLMenu == 2)
+				return;
+			else if (FLMenu == 3) {
+				signUp();
+				break;
+			}
+		}
+
+		else if (loginError == 0)
+			return;
+	}
+}	
+
+
+
+int FailLogin_menu(){
+	int FLMenu;
+	printf("\
 ERROR : 로그인 실패\n\
 1. 다시 로그인\n\
 2. 메인으로 돌아가기\n\
 3. 회원가입\n\
 ---------------------------\n");
-			m = scanf("%d", &loginMenu);
-			if (loginMenu == 1)
-				continue;
-			else if (loginMenu == 2)
-				return;
-			else if (loginMenu == 3) {
-				signUp();
-				break;
-			}
-		}
-		else if (loginError == 0)
-			break;
-	}
+	scanf("%d", &FLMenu);
+	return FLMenu;
 }
+
+
 
 void SuccessLogin_menu() {
 	int SLmenu, BookReturn;
@@ -186,32 +222,35 @@ void SuccessLogin_menu() {
 3. 회원 탈퇴\n\
 4. 로그아웃\n\
 5. 프로그램 종료\n");
-	scanf("%d", &SLmenu);
+	int m = scanf("%d", &SLmenu);
 	if (SLmenu == 1)
-		BookReturn = Find_book();
+//		BookReturn = Find_book();
+		;
 	else if (SLmenu == 2)
 		//내 대여 목록 찾는 함수 추가
 		;
 	else if (SLmenu == 3)
 		//회원 탈퇴 함수 추가(대출 목록에 이름 있으면 불가, 삭제 후 txt파일 업데이트)
 		Update_studentData();
-	else if (SLmenu == 4)
+	else if (SLmenu == 4){
+		member = NULL;
 		return;
+	}
 	else if (SLmenu == 5){
-		StudentFreedata();
-		exit(1);
+		student_free();
+		printf("====프로그램 종료====\n");
+		exit(0);
 	}
 }
 
-void StudentFreedata() {
-	Update_studentData();
-	student* tmp;
-	while (stHead->next != NULL) {
-		tmp = stHead;
-		if (tmp->next == NULL)
-			free(tmp);
-		else
-			tmp = tmp->next;
+void student_free() {
+	student *tmp = SThead;
+	while (tmp != NULL){
+		SThead = SThead->next;
+		free(tmp);
+		tmp = SThead;
 	}
-	free(stHead);
+	tmp = NULL;
+	SThead = NULL;
+	member = NULL;
 }

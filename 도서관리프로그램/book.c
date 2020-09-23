@@ -2,7 +2,9 @@
 #include <malloc.h>
 #include <string.h>
 #include "book.h"
+#include "student.h"
 #include "borrow.h"
+
 
 #define Book_name_size 100
 #define Book_company_size 30
@@ -10,28 +12,6 @@
 #define Book_author_size 50
 
 
-
-void Login(){           //로그인창 함수
-
-	char Adminnum[]="admin";
-	char Adminpassword[]="admin";
-	char Num[20];
-	char Password[20];
-
-	printf("\n[로그인]\n");
-	printf("학번:");
-	scanf("%s",Num);
-	printf("비밀번호:");
-	scanf("%s",Password);
-
-	if(strcmp(Adminnum,Num)==0&&strcmp(Adminpassword,Password)==0){
-		Admin();
-	}else{
-		//학생 로그인 가능한지 확인...
-		printf("로그인에 실패했습니다.\n");
-	}
-
-}
 
 
 /*

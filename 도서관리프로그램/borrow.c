@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -138,15 +139,3 @@ void delete_borrow(){	//도서반납->대출연결리스트에서 삭제
 	}
 }
 
-int main() {
-	borrow_init();
-	st_InitNode();
-	bk_init();
-	Book_load();
-//	confirm_stnum;
-//	confirm_isbn;
-//	add_borrowlist();
-//	save_borrow();
-//	delete_borrow();
-	Admin();
-}
