@@ -7,7 +7,7 @@
 
 typedef struct borrow{
 	char num[20];
-	char isbn[10];
+	char isbn[20];
 	struct borrow* next;
 
 }borrow;
@@ -21,7 +21,7 @@ void borrow_init(){ //대출연결리스트 초기화 함수
 	br_head->next=NULL;	
 }
                               
-int confirm_stnum(char *st_num ){  // 존재하는 학번인지 확인하는 함수
+int confirm_stnum(char *st_num){  // 존재하는 학번인지 확인하는 함수
 	student *cf_node;
 	cf_node=head;
 
@@ -39,7 +39,7 @@ int confirm_stnum(char *st_num ){  // 존재하는 학번인지 확인하는 함
 	return 0;
 }
 
-int confirm_isbn(char *isbn){  //존재하는 isbn인지 확인하는 함수
+int confirm_isbn(char *isbn, int sig){  //존재하는 isbn인지 확인하는 함수
 	Book* cf_node;
 	cf_node=Book_head;
 	
@@ -49,8 +49,22 @@ int confirm_isbn(char *isbn){  //존재하는 isbn인지 확인하는 함수
 			return 4;
 		}
 
-		if(!strcmp(cf_node->Book_ISBN,isbn ))
+
+		if(!strcmp(cf_node->Book_ISBN,isbn )){
+			if (sig==0){
+				if(cf_node->Book_borrow == 'y')
+					cf_node->Book_borrow='n';
+				else
+					printf("대출할 도서의 정보를 찾을 수 없습니다.");
+			}
+			else{
+				if(cf_node->Book_borrow == 'n')
+					cf_node->Book_borrow='y';
+				else
+					printf("반납할 도서의 정보를 찾을 수 없습니다.");
+				}
 			break;
+		}
 		cf_node=cf_node->next;
 	}
 	return 0;
@@ -70,10 +84,10 @@ void add_borrowlist(){ //도서대여 연결리스트
 	if (a==3)
 		return;
 
-	int b;
+	int b ;
 	printf("  ISBN: ");
 	scanf("%s", new_node->isbn);	
-	b=confirm_isbn(new_node->isbn);
+	b=confirm_isbn(new_node->isbn, 0);
 	if (b==4)
 		return;
 }
@@ -104,60 +118,28 @@ void delete_borrow(){	//도서반납->대출연결리스트에서 삭제
 
 	printf("ISBN : ");
 	scanf("%s", node->isbn);
-	b=confirm_isbn(node->isbn);   //존재하는 isbn인지 확인
+	b=confirm_isbn(node->isbn, 1);   //존재하는 isbn인지 확인
 	if (b==4)
 		return;
-	
+
 	while(1){  //삭제할 노드 탐색
 		if(delnode->next==NULL){
 			printf("대출 정보를 찾을 수 없습니다.");
-            return 1;
+           	return 1;
 		}
 		if(strcmp(node->num,delnode->num) == 0 && strcmp(node->isbn, delnode->isbn)==0){
 			backnode=delnode->next;//노드삭제
 			free(delnode);
 			printf("반납되었습니다.");
-			return 0;
+				return 0;
 		}
 		backnode=delnode;
 	    delnode=delnode->next;
 	}
 }
 
-void Admin(){     //관리자모드
- 
-         while(1){
-
-     int c_num=0;
-     c_num=Admin_mode();           ///문자 입력시 무한수열 이유...? 
- 
-     if(c_num==1){
-         add_book();
-         Load_list_to_file();
-     }else if(c_num==2){
-         remove_book();
- 
-     }else if(c_num==3){
-         add_borrowlist();
-     }else if(c_num==4){
-         delete_borrow();
-     }else if(c_num==5){
-         Find_book();
- 
-     }else if(c_num==6){
-         //효원이 학생 연결리스트 불러오기 
- 
-     }else if(c_num==7){
-      //맨 처음 [도서관 서비스]로 이동
-     }else if(c_num==8){
-         break;
-     }else{
-       printf("1부터 8까지의 수 중 하나를 입력해 주십시오.\n");
-       fflush(stdin);
-     }
-
-	
 	int main() {
+	bk_init();
 	borrow_init();
 	st_InitNode();
 //	confirm_stnum;

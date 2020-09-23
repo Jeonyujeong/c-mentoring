@@ -2,7 +2,7 @@
 #include <malloc.h>
 #include <string.h>
 #include "book.h"
-
+#include "borrow.h"
 
 #define Book_name_size 100
 #define Book_company_size 30
@@ -438,9 +438,10 @@ void Admin(){     //관리자모드
 		remove_book();
 		
 	}else if(c_num==3){
-		borrow_book();
+		add_borrowlist();
+		save_borrow();
 	}else if(c_num==4){
-		return_book();
+		delete_borrow();
 	}else if(c_num==5){
 		Find_book();
 		
