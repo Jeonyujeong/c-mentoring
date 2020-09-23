@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 //#include "book.h"
 
 
@@ -13,10 +14,12 @@ int FailLogin_menu();
 
 typedef struct student{
 	struct student* next;
+
 	char stnum[20];
 	char passward[20];
 	char name[20];
 }student;
+
 
 student* SThead;
 student* member;
@@ -27,6 +30,7 @@ void st_InitNode() {
 		return;
 	SThead->next = NULL;
 	member = SThead;
+
 }
 
 //학생 정보 (리스트로) 가져오기
@@ -47,6 +51,7 @@ void Import_studentData() {
 	fclose(stfp);
 }
 
+
 void Update_studentData() {   //리스트에서 파일로 입력해주는 함수 
 	FILE* fp = fopen("student.txt", "w");
 	student* tmp = SThead;
@@ -58,6 +63,7 @@ void Update_studentData() {   //리스트에서 파일로 입력해주는 함수
 	}
 	fclose(fp);
 }
+
 
 int main() {
 //	Book_load();
@@ -102,9 +108,9 @@ void signUp() {
 	if (newstudent == NULL || tmp == NULL)
 		return;
 	printf("학번 : ");
-	m=scanf("%s", newstudent->stnum);
+	m=scanf("%s", newstudent->stnum); myflush();
 	printf("비밀번호 : ");
-	m=scanf("%s", newstudent->passward);
+	m=scanf("%s", newstudent->passward);myflush();
 	printf("이름 : ");
 	m=scanf("%s", newstudent->name);
 	while(tmp->next != NULL){
@@ -176,6 +182,7 @@ void logIn() {
 		if (loginError == 1){
 			FLMenu = FailLogin_menu();
 			if (FLMenu == 1)
+
 				continue;
 			else if (FLMenu == 2)
 				return;

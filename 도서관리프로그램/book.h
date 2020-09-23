@@ -7,9 +7,9 @@ typedef struct Book{
 	char Book_company[30];
 	char Book_ISBN[20];
 	char Book_author[20];
-	char Book_borrow; 
+	char Book_borrow;
 	struct Book *next;
-	
+
 }Book;
 
 Book *Book_head;
@@ -34,7 +34,8 @@ void Admin();
 void return_book();
 void Search_book_author();
 void Search_book_company();
+void books();
 int Find_word(char *,char *);
 Book* ISBN_cmp();
-
+void Book_load();
 #endif

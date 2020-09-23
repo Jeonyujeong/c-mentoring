@@ -3,7 +3,7 @@
 #include <string.h>
 #include "book.h"
 #include "student.h"
-
+#include "borrow.h"
 
 
 #define Book_name_size 100
@@ -15,82 +15,78 @@
 
 
 /*
-typedef struct Book{      //µµ¼­ ¸ñ·Ï ¸µÅ©µå¸®½ºÆ® 
+typedef struct Book{      //ë„ì„œ ëª©ë¡ ë§í¬ë“œë¦¬ìŠ¤íŠ¸
 	char Book_name[Book_name_size];
 	char Book_company[Book_company_size];
 	char Book_ISBN[Book_ISBN_size];
 	char Book_author[Book_author_size];
-	char Book_borrow; 
+	char Book_borrow;
 	struct Book *next;
-	
-}Book;
 
+}Book;
 Book *Book_head;
-Book *Book_tmp; //¸Ç ³¡ Ã¥ À§Ä¡ 
+Book *Book_tmp; //ë§¨ ë ì±… ìœ„ì¹˜
 Book *ttmp;
 Book *ttmp_back;
-
 */
 
-void bk_init(){                          // book ¸®½ºÆ® ¸Ç Ã³À½ºÎºĞ ¸¸µå´Â ÇÔ¼ö 
+void bk_init(){                          // book ë¦¬ìŠ¤íŠ¸ ë§¨ ì²˜ìŒë¶€ë¶„ ë§Œë“œëŠ” í•¨ìˆ˜
 
-FILE* fp=fopen("bk.txt","w");
 	Book_head=(Book *)malloc(sizeof(Book));
-	
+
 	Book_head->next=NULL;
-	Book_tmp=Book_head;	
-	fclose(fp);
+	Book_tmp=Book_head;
 }
 
 
 
-int Admin_mode(){                      //°ü¸®ÀÚ ¸ğµå Ãâ·Â ÇÔ¼ö ,¼±ÅÃ ¼ö ¸®ÅÏ 
+int Admin_mode(){                      //ê´€ë¦¬ì ëª¨ë“œ ì¶œë ¥ í•¨ìˆ˜ ,ì„ íƒ ìˆ˜ ë¦¬í„´
 	int choice;
-	printf("\n[°ü¸®ÀÚ ¸ğµå]\n");
-	printf("1. µµ¼­ µî·Ï\n");
-	printf("2. µµ¼­ »èÁ¦\n");
-	printf("3. µµ¼­ ´ë¿©\n");
-	printf("4. µµ¼­ ¹İ³³\n");
-	printf("5. µµ¼­ °Ë»ö\n");
-	printf("6. È¸¿ø ¸ñ·Ï\n");
-	printf("7. ·Î±×¾Æ¿ô\n");
-	printf("8.ÇÁ·Î±×·¥ Á¾·á\n");
+	printf("\n[ê´€ë¦¬ì ëª¨ë“œ]\n");
+	printf("1. ë„ì„œ ë“±ë¡\n");
+	printf("2. ë„ì„œ ì‚­ì œ\n");
+	printf("3. ë„ì„œ ëŒ€ì—¬\n");
+	printf("4. ë„ì„œ ë°˜ë‚©\n");
+	printf("5. ë„ì„œ ê²€ìƒ‰\n");
+	printf("6. íšŒì› ëª©ë¡\n");
+	printf("7. ë¡œê·¸ì•„ì›ƒ\n");
+	printf("8.í”„ë¡œê·¸ë¨ ì¢…ë£Œ\n");
 
-	scanf("%d",&choice); 
+	scanf("%d",&choice);
 	return choice;
 }
 
 
- 
-void add_book(){                 //µµ¼­ µî·Ï ÇÔ¼ö 
+
+void add_book(){                 //ë„ì„œ ë“±ë¡ í•¨ìˆ˜
 	Book *p=(Book *)malloc(sizeof(Book));
-	
-	printf("[ µµ¼­ µî·Ï ]\n");
-	printf("µµ¼­¸í:");
+
+	printf("[ ë„ì„œ ë“±ë¡ ]\n");
+	printf("ë„ì„œëª…:");
 	getchar();
 	fgets(p->Book_name,Book_name_size,stdin);
-	Erase_enter(p->Book_name); 
-	printf("ÃâÆÇ»ç:");
+	Erase_enter(p->Book_name);
+	printf("ì¶œíŒì‚¬:");
 	fgets(p->Book_company,Book_name_size,stdin);
 	Erase_enter(p->Book_company);
-	printf("ÀúÀÚ¸í:");
+	printf("ì €ìëª…:");
 	fgets(p->Book_author,Book_name_size,stdin);
 	Erase_enter(p->Book_author);
 	printf("ISBN:");
 	fgets(p->Book_ISBN,Book_name_size,stdin);
 	Erase_enter(p->Book_ISBN);
-	
-	printf("´ëÃâ°¡´É ¿©ºÎ(y/n):");
+
+	printf("ëŒ€ì¶œê°€ëŠ¥ ì—¬ë¶€(y/n):");
 	scanf("%c",&p->Book_borrow);
 	getchar();
 	while(p->Book_borrow!='y'&&p->Book_borrow!='n'){
-		printf("'y'¿Í 'n'Áß ÇÏ³ª¸¦ ÀÔ·ÂÇØ ÁÖ½Ê½Ã¿À :");
+		printf("'y'ì™€ 'n'ì¤‘ í•˜ë‚˜ë¥¼ ì…ë ¥í•´ ì£¼ì‹­ì‹œì˜¤ :");
 		scanf("%c",&p->Book_borrow);
 		getchar();
-		
-	} 
+
+	}
 	p->next=NULL;
-	
+
 	Book_tmp->next=p;
 	Book_tmp=Book_tmp->next;
 
@@ -100,9 +96,9 @@ void add_book(){                 //µµ¼­ µî·Ï ÇÔ¼ö
 	*/
 }
 
-void remove_book(){              // µµ¼­ »èÁ¦ ÇÔ¼ö 
+void remove_book(){              // ë„ì„œ ì‚­ì œ í•¨ìˆ˜
 	char name[Book_name_size];
-	printf("µµ¼­¸í:");
+	printf("ë„ì„œëª…:");
 	scanf("%s",name);
 	ttmp=Book_head->next;
 	ttmp_back=Book_head;
@@ -111,281 +107,282 @@ void remove_book(){              // µµ¼­ »èÁ¦ ÇÔ¼ö
 		ttmp=ttmp->next;
 	}
 	if(ttmp==NULL){
-		printf("%s¶õ µµ¼­¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù.\n",name);
+		printf("%së€ ë„ì„œë¥¼ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.\n",name);
 	}else{
 		if(ttmp->Book_borrow=='n'){
-			printf("´ëÃâÁßÀÎ Ã¥Àº »èÁ¦°¡ ºÒ°¡´ÉÇÕ´Ï´Ù.\n");
+			printf("ëŒ€ì¶œì¤‘ì¸ ì±…ì€ ì‚­ì œê°€ ë¶ˆê°€ëŠ¥í•©ë‹ˆë‹¤.\n");
 		}else{
-			
+
 			ttmp_back->next=ttmp->next;
 			free(ttmp);
-			printf("»èÁ¦°¡ ¿Ï·áµÇ¾ú½À´Ï´Ù.\n");
+			printf("ì‚­ì œê°€ ì™„ë£Œë˜ì—ˆìŠµë‹ˆë‹¤.\n");
 			Load_list_to_file();
 		}
-		
-		
+
+
 	}
 }
 
-void borrow_book(){        //µµ¼­ ´ë¿© ÇÔ¼ö  
+void borrow_book(){        //ë„ì„œ ëŒ€ì—¬ í•¨ìˆ˜
 char student[10];
-char ISBN[Book_ISBN_size]; 
-	printf("[µµ¼­´ë¿©]\n");
-	printf("ÇĞ¹ø :");
-	
+char ISBN[Book_ISBN_size];
+	printf("[ë„ì„œëŒ€ì—¬]\n");
+	printf("í•™ë²ˆ :");
+
 	scanf("%s",student);
-	printf("ISBN :"); 
+	printf("ISBN :");
 	 scanf("%s",ISBN);
-	 //ÇĞ»ı ¸®½ºÆ® ÀÌ¿ëÇØ¼­...(ÇĞ¹ø¿¡ ¸Â´Â ÇĞ»ı ÀÖÀ¸¸é ´ëÃâÇØÁÜ(ÇĞ»ı ¸ñ·Ï¿¡ Ã¥µµ Ãß°¡ÇØÁØ´Ù) 
+	 //í•™ìƒ ë¦¬ìŠ¤íŠ¸ ì´ìš©í•´ì„œ...(í•™ë²ˆì— ë§ëŠ” í•™ìƒ ìˆìœ¼ë©´ ëŒ€ì¶œí•´ì¤Œ(í•™ìƒ ëª©ë¡ì— ì±…ë„ ì¶”ê°€í•´ì¤€ë‹¤)
 	 ttmp=Book_head->next;
 	 while(ttmp!=NULL&&strcmp(ttmp->Book_ISBN,ISBN)!=0){
-		 ttmp=ttmp->next; 
+		 ttmp=ttmp->next;
 	 }
 	 if(ttmp==NULL){
-	 	printf("Á¸ÀçÇÏÁö ¾Ê´Â µµ¼­ÀÔ´Ï´Ù.\n") ;
+	 	printf("ì¡´ì¬í•˜ì§€ ì•ŠëŠ” ë„ì„œì…ë‹ˆë‹¤.\n") ;
 	 }else{
-	 	
+
 	 	if(strcmp(ttmp->Book_ISBN,ISBN)==0){
 	 		if(ttmp->Book_borrow=='n'){
-	 			printf("ÀÌ¹Ì ´ëÃâµÈ µµ¼­ÀÔ´Ï´Ù.\n");
-	 		
+	 			printf("ì´ë¯¸ ëŒ€ì¶œëœ ë„ì„œì…ë‹ˆë‹¤.\n");
+
 			 }else{
-			 	printf("'%s'Ã¥ÀÌ ´ëÃâµÇ¾ú½À´Ï´Ù.\n",ttmp->Book_name);
+			 	printf("'%s'ì±…ì´ ëŒ€ì¶œë˜ì—ˆìŠµë‹ˆë‹¤.\n",ttmp->Book_name);
 			 	ttmp->Book_borrow='n';
 			 	Load_list_to_file();
-			 
-			 }
-			 
-		 }
-	 } 
-	
-} 
 
-Book* ISBN_cmp(char ISBN[Book_ISBN_size]){  //isbnÀ» ¹Ş¾Æ ¸µ½ºµå¸®½ºÆ® ¾È¿¡¼­ ºñ±³ÇØ¼­ book³ëµå ÁÖ¼Ò ¹İÈ¯ÇÏ´Â ÇÔ¼ö 
-	
+			 }
+
+		 }
+	 }
+
+}
+
+Book* ISBN_cmp(char ISBN[Book_ISBN_size]){  //isbnì„ ë°›ì•„ ë§ìŠ¤ë“œë¦¬ìŠ¤íŠ¸ ì•ˆì—ì„œ ë¹„êµí•´ì„œ bookë…¸ë“œ ì£¼ì†Œ ë°˜í™˜í•˜ëŠ” í•¨ìˆ˜
+
 	ttmp=Book_head->next;
-	
+
 	while(ttmp!=NULL&&strcmp(ttmp->Book_ISBN,ISBN)!=0){
-		 ttmp=ttmp->next; 
+		 ttmp=ttmp->next;
 	}
 	return ttmp;
 }
 
-void return_book(){      //µµ¼­ ¹İ³³ ÇÔ¼ö
-	 
+void return_book(){      //ë„ì„œ ë°˜ë‚© í•¨ìˆ˜
+
 	char ISBN[Book_ISBN_size];
 	printf("ISBN:");
 	scanf("%s",ISBN);
-	
+
 	q=ISBN_cmp(ISBN);
-	
+
 	if(q==NULL){
-	 	printf("Á¸ÀçÇÏÁö ¾Ê´Â µµ¼­ÀÔ´Ï´Ù.\n") ;
+	 	printf("ì¡´ì¬í•˜ì§€ ì•ŠëŠ” ë„ì„œì…ë‹ˆë‹¤.\n") ;
 	}else{
-	 	
+
 	 	if(strcmp(q->Book_ISBN,ISBN)==0){
 	 		if(ttmp->Book_borrow=='y'){
-	 			printf("ÀÌ¹Ì ¹İ³³µÈ µµ¼­ÀÔ´Ï´Ù.\n");
-	 		
+	 			printf("ì´ë¯¸ ë°˜ë‚©ëœ ë„ì„œì…ë‹ˆë‹¤.\n");
+
 			 }else{
-			 	printf("'%s'Ã¥ÀÌ ¹İ³³µÇ¾ú½À´Ï´Ù.\n",q->Book_name);
+			 	printf("'%s'ì±…ì´ ë°˜ë‚©ë˜ì—ˆìŠµë‹ˆë‹¤.\n",q->Book_name);
 			 	q->Book_borrow='y';
 			 	Load_list_to_file();
-			 
-			 }
-			 
-		 }
-	 } 
-	 
-} 
 
-void Load_list_to_file(){   //¸®½ºÆ®¿¡¼­ ÆÄÀÏ·Î ÀÔ·ÂÇØÁÖ´Â ÇÔ¼ö 
+			 }
+
+		 }
+	 }
+
+}
+
+void Load_list_to_file(){   //ë¦¬ìŠ¤íŠ¸ì—ì„œ íŒŒì¼ë¡œ ì…ë ¥í•´ì£¼ëŠ” í•¨ìˆ˜
 	FILE* fp= fopen("bk.txt","w");
 	ttmp=Book_head->next;
 	while(ttmp!=NULL){
-		fprintf(fp,"%s %s %s %s %c",ttmp->Book_name,ttmp->Book_company,ttmp->Book_author,ttmp->Book_ISBN,ttmp->Book_borrow);
-		ttmp=Book_tmp->next;
+		fprintf(fp,"%s %s %s %s %c\n",ttmp->Book_name,ttmp->Book_company,ttmp->Book_author,ttmp->Book_ISBN,ttmp->Book_borrow);
+		ttmp=ttmp->next;
 	}
 	fclose(fp);
-} 
+}
 
 
-void Book_load(){                  //ÆÄÀÏ¿¡¼­ ¸µÅ©µå¸®½ºÆ®·Î ¸¸µå´Â ÇÔ¼ö->½ÇÇà ¾ÈÇØº½ 
+void Book_load(){                  //íŒŒì¼ì—ì„œ ë§í¬ë“œë¦¬ìŠ¤íŠ¸ë¡œ ë§Œë“œëŠ” í•¨ìˆ˜->ì‹¤í–‰ ì•ˆí•´ë´„
 	char name[Book_name_size];
 	char company[Book_company_size];
 	char ISBN[Book_ISBN_size];
 	char author[Book_author_size];
 	char borrow;
-	
-	
+
+
 	FILE* fp=fopen("bk.txt","r");
 	int ret=0;
 
 	while(1){
-	
+
 		Book *q=(Book *)malloc(sizeof(Book));
 		q->next=NULL;
-		
+
 		ret=fscanf(fp,"%s %s %s %s %c",name,company,author,ISBN,&borrow);
-		
-		printf("%s %s %s %s %c",name,company,author,ISBN,borrow);
-		
+		if (ret==EOF)
+			break;
+		//printf("%s %s %s %s %c",name,company,author,ISBN,borrow);
+
 		strcpy(q->Book_name,name);
 		strcpy(q->Book_company,company);
 		strcpy(q->Book_ISBN,ISBN);
 		strcpy(q->Book_author,author);
-		
+
 		q->Book_borrow=borrow;
-		
+
 		Book_tmp->next=q;
 		Book_tmp=q;
-		
+
 		if(ret==EOF)
 		break;
-		
+
 	}
 	fclose(fp);
-} 
+}
 
 
-int Find_book(){        //[µµ¼­°Ë»ö]Ã¢  ,¹øÈ£ ¸®ÅÏ 
+int Find_book(){        //[ë„ì„œê²€ìƒ‰]ì°½  ,ë²ˆí˜¸ ë¦¬í„´
 
 	int num;
 	while(1){
-	
-	printf("\n[µµ¼­°Ë»ö]\n");
-	printf("1. µµ¼­¸í °Ë»ö\n");
-	printf("2. ÃâÆÇ»ç °Ë»ö\n");
-	printf("3. ISBN °Ë»ö\n");
-	printf("4. ÀúÀÚ¸í °Ë»ö\n");
-	printf("5. ÀüÃ¼ °Ë»ö\n");
-	printf("6. ÀÌÀü ¸Ş´º\n");
+
+	printf("\n[ë„ì„œê²€ìƒ‰]\n");
+	printf("1. ë„ì„œëª… ê²€ìƒ‰\n");
+	printf("2. ì¶œíŒì‚¬ ê²€ìƒ‰\n");
+	printf("3. ISBN ê²€ìƒ‰\n");
+	printf("4. ì €ìëª… ê²€ìƒ‰\n");
+	printf("5. ì „ì²´ ê²€ìƒ‰\n");
+	printf("6. ì´ì „ ë©”ë‰´\n");
 	scanf("%d",&num);
-	
+
 	if(num==1){
 		Search_book_name();
 	}else if(num==2){
 		Search_book_company();
 	}else if(num==3){
 		char isbn[Book_ISBN_size];
-		
+
 		printf("ISBN: ");
 		scanf("%s",isbn);
 		q=ISBN_cmp(isbn);
-		
+
 		if(q==NULL){
-			printf("Á¸ÀçÇÏÁö ¾Ê´Â µµ¼­ÀÔ´Ï´Ù.\n");
+			printf("ì¡´ì¬í•˜ì§€ ì•ŠëŠ” ë„ì„œì…ë‹ˆë‹¤.\n");
 		}else{
 			Book_information(q);
 		}
 	}else if(num==4){
-		Search_book_author(); 
-		
+		Search_book_author();
+
 	}else if(num==5){
-		
+		books();
 	}else if(num==6){
 		break;
 	}else{
-		printf("1~6»çÀÌÀÇ ¼ö¸¦ ÀÔ·ÂÇØ ÁÖ½Ê½Ã¿À\n");
+		printf("1~6ì‚¬ì´ì˜ ìˆ˜ë¥¼ ì…ë ¥í•´ ì£¼ì‹­ì‹œì˜¤\n");
 	}
 	}
-} 
+}
 
-void Search_book_author(){   //ÀúÀÚ¸í Ã£¾ÆÁÖ´Â ÇÔ¼ö 
-	
+void Search_book_author(){   //ì €ìëª… ì°¾ì•„ì£¼ëŠ” í•¨ìˆ˜
+
 	char author[Book_author_size];
-	printf("ÀúÀÚ¸í :");
+	printf("ì €ìëª… :");
 	getchar();
 	fgets(author,Book_author_size,stdin);
 	Erase_enter(author);
-	
+
 	ttmp=Book_head->next;
 	int nu=0;
-	
+
 	while(ttmp!=NULL){
 		if(Find_word(author,ttmp->Book_author)==1){
-			Book_information(ttmp);	
+			Book_information(ttmp);
 			nu++;
 		}
 		ttmp_back=ttmp;
 		ttmp=ttmp->next;
 	}
-	
+
 	if(nu==0){
-		printf("ÀúÀÚ¸íÀÌ %sÀÎ µµ¼­¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù.\n",author);
+		printf("ì €ìëª…ì´ %sì¸ ë„ì„œë¥¼ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.\n",author);
 	}else{
-		printf("\nÃÑ %d±ÇÀÇ Ã¥ÀÌ °Ë»öµÇ¾ú½À´Ï´Ù.\n",nu);
+		printf("\nì´ %dê¶Œì˜ ì±…ì´ ê²€ìƒ‰ë˜ì—ˆìŠµë‹ˆë‹¤.\n",nu);
 	}
 }
 
-void Search_book_company(){        //ÃâÆÇ»ç Ã£´Â ÇÔ¼ö 
-	
+void Search_book_company(){        //ì¶œíŒì‚¬ ì°¾ëŠ” í•¨ìˆ˜
+
 	char company[Book_company_size];
-	printf("ÃâÆÇ»ç¸í :");
+	printf("ì¶œíŒì‚¬ëª… :");
 	getchar();
 	fgets(company,Book_company_size,stdin);
 	Erase_enter(company);
-	
+
 	ttmp=Book_head->next;
 	int nu=0;
-	
+
 	while(ttmp!=NULL){
 		if(Find_word(company,ttmp->Book_company)==1){
-			Book_information(ttmp);	
+			Book_information(ttmp);
 			nu++;
 		}
 		ttmp_back=ttmp;
 		ttmp=ttmp->next;
 	}
-	
+
 	if(nu==0){
-		printf("ÃâÆÇ»ç°¡  %sÀÎ µµ¼­¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù.\n",company);
+		printf("ì¶œíŒì‚¬ê°€  %sì¸ ë„ì„œë¥¼ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.\n",company);
 	}else{
-		printf("\nÃÑ %d±ÇÀÇ Ã¥ÀÌ °Ë»öµÇ¾ú½À´Ï´Ù.\n",nu);
+		printf("\nì´ %dê¶Œì˜ ì±…ì´ ê²€ìƒ‰ë˜ì—ˆìŠµë‹ˆë‹¤.\n",nu);
 	}
 }
 
-void Book_information(Book *node){      //³ëµå ÁÖ¼Ò¸¦ ¹Ş¾Æ Á¤º¸¸¦ ´Ù Ãâ·ÂÇØÁÖ´Â ÇÔ¼ö 
-	
-	printf("\nµµ¼­¸í : %s\n",node->Book_name);
-	printf("ÃâÆÇ»ç : %s\n",node->Book_company);
+void Book_information(Book *node){      //ë…¸ë“œ ì£¼ì†Œë¥¼ ë°›ì•„ ì •ë³´ë¥¼ ë‹¤ ì¶œë ¥í•´ì£¼ëŠ” í•¨ìˆ˜
+
+	printf("\në„ì„œëª… : %s\n",node->Book_name);
+	printf("ì¶œíŒì‚¬ : %s\n",node->Book_company);
 	printf("ISBN : %s\n",node->Book_ISBN);
-	printf("ÀúÀÚ¸í : %s\n",node->Book_author);
-	printf("´ëÃâ¿©ºÎ : %c\n",node->Book_borrow);
-	
+	printf("ì €ìëª… : %s\n",node->Book_author);
+	printf("ëŒ€ì¶œì—¬ë¶€ : %c\n",node->Book_borrow);
+
 }
 
 
-void Erase_enter(char *s){  //°³Çà¹®ÀÚ Áö¿öÁÖ´Â ÇÔ¼ö 
+void Erase_enter(char *s){  //ê°œí–‰ë¬¸ì ì§€ì›Œì£¼ëŠ” í•¨ìˆ˜
 	s[strlen(s)-1]='\0';
 }
 
-void Search_book_name(){         //µµ¼­¸í °Ë»ö ÇÔ¼ö 
+void Search_book_name(){         //ë„ì„œëª… ê²€ìƒ‰ í•¨ìˆ˜
 	char name[Book_name_size];
-	printf("Ã¥ÀÌ¸§: ");
+	printf("ì±…ì´ë¦„: ");
 	getchar();
 	fgets(name,Book_name_size,stdin);
 	Erase_enter(name);
-	
+
 	ttmp=Book_head->next;
 	int nu=0;
 	while(ttmp!=NULL){
 		if(Find_word(name,ttmp->Book_name)==1){
-			Book_information(ttmp);	
+			Book_information(ttmp);
 			nu++;
 		}
 		ttmp_back=ttmp;
 		ttmp=ttmp->next;
 	}
 	if(nu==0){
-		printf("%s¶õ µµ¼­¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù.\n",name);
+		printf("%së€ ë„ì„œë¥¼ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.\n",name);
 	}else{
-		printf("ÃÑ %d±ÇÀÇ Ã¥ÀÌ °Ë»öµÇ¾ú½À´Ï´Ù.\n",nu);
+		printf("ì´ %dê¶Œì˜ ì±…ì´ ê²€ìƒ‰ë˜ì—ˆìŠµë‹ˆë‹¤.\n",nu);
 	}
-	 
-} 
 
-int Find_word(char *a,char *b){       //´Ü¾î Ã£±â ÇÔ¼ö 
+}
+
+int Find_word(char *a,char *b){       //ë‹¨ì–´ ì°¾ê¸° í•¨ìˆ˜
 
 	if(strstr(b,a)==NULL){
 		return 0;
@@ -400,54 +397,53 @@ void books(){
 	while(ttmp!=NULL){
 		printf("%s %s %s %s %c\n",ttmp->Book_name,ttmp->Book_company,ttmp->Book_author,ttmp->Book_ISBN,ttmp->Book_borrow);
 		ttmp=ttmp->next;
-			
+
 	}
 
 }
-void Admin(){     //°ü¸®ÀÚ¸ğµå 
-	
+void Admin(){     //ê´€ë¦¬ìëª¨ë“œ
+
 		while(1){
-	
+
 	int c_num=0;
-	c_num=Admin_mode();           ///¹®ÀÚ ÀÔ·Â½Ã ¹«ÇÑ¼ö¿­ ÀÌÀ¯...? 
-		
+	c_num=Admin_mode();           ///ë¬¸ì ì…ë ¥ì‹œ ë¬´í•œìˆ˜ì—´ ì´ìœ ...?
+
 	if(c_num==1){
 		add_book();
 		Load_list_to_file();
 	}else if(c_num==2){
 		remove_book();
-		
+
 	}else if(c_num==3){
-		borrow_book();
+		add_borrowlist();
+		save_borrow();
 	}else if(c_num==4){
-		return_book();
+		delete_borrow();
 	}else if(c_num==5){
 		Find_book();
-		
+
 	}else if(c_num==6){
-		//È¿¿øÀÌ ÇĞ»ı ¿¬°á¸®½ºÆ® ºÒ·¯¿À±â 
-		
+		//íš¨ì›ì´ í•™ìƒ ì—°ê²°ë¦¬ìŠ¤íŠ¸ ë¶ˆëŸ¬ì˜¤ê¸°
+
 	}else if(c_num==7){
-	 //¸Ç Ã³À½ [µµ¼­°ü ¼­ºñ½º]·Î ÀÌµ¿ 
+	 //ë§¨ ì²˜ìŒ [ë„ì„œê´€ ì„œë¹„ìŠ¤]ë¡œ ì´ë™
 	}else if(c_num==8){
 		break;
 	}else{
-	  printf("1ºÎÅÍ 8±îÁöÀÇ ¼ö Áß ÇÏ³ª¸¦ ÀÔ·ÂÇØ ÁÖ½Ê½Ã¿À.\n");
-	  fflush(stdin); 
+	  printf("1ë¶€í„° 8ê¹Œì§€ì˜ ìˆ˜ ì¤‘ í•˜ë‚˜ë¥¼ ì…ë ¥í•´ ì£¼ì‹­ì‹œì˜¤.\n");
+	  fflush(stdin);
 	}
-		
-	
-	
+
+
+
 }
 }
 
 /*
 int main(){
-	
+
 	bk_init();
 	Login();
-
-
 	return 0;
 }
 */
