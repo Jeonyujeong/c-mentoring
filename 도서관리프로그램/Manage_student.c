@@ -59,7 +59,7 @@ void Update_studentData() {   //리스트에서 파일로 입력해주는 함수
 	}
 	fclose(fp);
 }
-
+/*
 int main() {
 	int menu=0, m;
 	FILE* stfp = fopen("student.txt", "w");
@@ -89,6 +89,7 @@ int main() {
 	StudentFreedata();
 	return 0;
 }
+*/
 
 // 회원가입
 void signUp() {

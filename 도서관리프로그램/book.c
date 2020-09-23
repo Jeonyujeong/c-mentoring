@@ -52,12 +52,10 @@ Book *ttmp_back;
 
 void bk_init(){                          // book 리스트 맨 처음부분 만드는 함수
 
-FILE* fp=fopen("bk.txt","w");
 	Book_head=(Book *)malloc(sizeof(Book));
 
 	Book_head->next=NULL;
 	Book_tmp=Book_head;
-	fclose(fp);
 }
 
 
@@ -221,8 +219,8 @@ void Load_list_to_file(){   //리스트에서 파일로 입력해주는 함수
 	FILE* fp= fopen("bk.txt","w");
 	ttmp=Book_head->next;
 	while(ttmp!=NULL){
-		fprintf(fp,"%s %s %s %s %c",ttmp->Book_name,ttmp->Book_company,ttmp->Book_author,ttmp->Book_ISBN,ttmp->Book_borrow);
-		ttmp=Book_tmp->next;
+		fprintf(fp,"%s %s %s %s %c\n",ttmp->Book_name,ttmp->Book_company,ttmp->Book_author,ttmp->Book_ISBN,ttmp->Book_borrow);
+		ttmp=ttmp->next;
 	}
 	fclose(fp);
 }
@@ -245,8 +243,9 @@ void Book_load(){                  //파일에서 링크드리스트로 만드�
 		q->next=NULL;
 
 		ret=fscanf(fp,"%s %s %s %s %c",name,company,author,ISBN,&borrow);
-
-		printf("%s %s %s %s %c",name,company,author,ISBN,borrow);
+		if (ret==EOF)
+			break;
+		//printf("%s %s %s %s %c",name,company,author,ISBN,borrow);
 
 		strcpy(q->Book_name,name);
 		strcpy(q->Book_company,company);
@@ -300,7 +299,7 @@ int Find_book(){        //[도서검색]창  ,번호 리턴
 		Search_book_author();
 
 	}else if(num==5){
-
+		books();
 	}else if(num==6){
 		break;
 	}else{

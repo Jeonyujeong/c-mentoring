@@ -39,7 +39,7 @@ int confirm_stnum(char *st_num ){  // 존재하는 학번인지 확인하는 함
 	return 0;
 }
 
-int confirm_isbn(char *isbn, int sig){  //존재하는 isbn인지 확인하는 함수
+int confirm_isbn(char *isbn, int sig){  //존재하는 isbn인지 확인,대출가능여부 확인하는 함수
 	Book* cf_node;
 	cf_node=Book_head;
 
@@ -95,11 +95,11 @@ void add_borrowlist(){ //도서대여 연결리스트
 void save_borrow(){  //대출정보 저장
 	FILE* brfp=fopen("borrow.txt","w");
 	borrow *tmp=br_head->next;
-
+	
 	while(1){  //borrow연결리스트에 있는 정보탐색
-		fprintf(brfp, "%s %s\n", tmp->num, tmp->isbn);
 		if (tmp==NULL)
 			break;
+		fprintf(brfp, "%s %s\n", tmp->num, tmp->isbn);
 		tmp=tmp->next;
 	}
 	fclose(brfp);
@@ -125,25 +125,24 @@ void delete_borrow(){	//도서반납->대출연결리스트에서 삭제
 	while(1){  //삭제할 노드 탐색
 		if(delnode->next==NULL){
 			printf("대출 정보를 찾을 수 없습니다.");
-           	return 1;
+           	return;
 		}
 		if(strcmp(node->num,delnode->num) == 0 && strcmp(node->isbn, delnode->isbn)==0){
 			backnode=delnode->next;//노드삭제
 			free(delnode);
 			printf("반납되었습니다.");
-				return 0;
+				return;
 		}
 		backnode=delnode;
 	    delnode=delnode->next;
 	}
 }
 
-	int main() {
-	bk_init();
-/*
 int main() {
 	borrow_init();
 	st_InitNode();
+	bk_init();
+	Book_load();
 //	confirm_stnum;
 //	confirm_isbn;
 //	add_borrowlist();
@@ -151,4 +150,3 @@ int main() {
 //	delete_borrow();
 	Admin();
 }
-*/

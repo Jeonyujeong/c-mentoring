@@ -34,6 +34,7 @@ void Admin();
 void return_book();
 void Search_book_author();
 void Search_book_company();
+void books();
 int Find_word(char *,char *);
 Book* ISBN_cmp();
 void Book_load();

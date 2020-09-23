@@ -1,6 +1,6 @@
 typedef struct borrow{
-     int num;
-     int isbn[10];
+     int num[20];
+     int isbn[20];
      struct borrow* next;
  }borrow;
  
