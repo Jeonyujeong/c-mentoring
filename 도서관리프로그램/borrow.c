@@ -18,10 +18,10 @@ borrow* br_tail;
 void borrow_init(){ //대출연결리스트 초기화 함수
 	br_head=(borrow*)malloc(sizeof(borrow));
 	br_tail=br_head;
-	br_head->next=NULL;	
+	br_head->next=NULL;
 }
-                              
-int confirm_stnum(char *st_num){  // 존재하는 학번인지 확인하는 함수
+
+int confirm_stnum(char *st_num ){  // 존재하는 학번인지 확인하는 함수
 	student *cf_node;
 	cf_node=head;
 
@@ -42,7 +42,7 @@ int confirm_stnum(char *st_num){  // 존재하는 학번인지 확인하는 함�
 int confirm_isbn(char *isbn, int sig){  //존재하는 isbn인지 확인하는 함수
 	Book* cf_node;
 	cf_node=Book_head;
-	
+
 	while(1){
 		if(cf_node==NULL){
 			printf("존재하지 않는 ISBN 입니다.\n");
@@ -140,6 +140,8 @@ void delete_borrow(){	//도서반납->대출연결리스트에서 삭제
 
 	int main() {
 	bk_init();
+/*
+int main() {
 	borrow_init();
 	st_InitNode();
 //	confirm_stnum;
@@ -148,4 +150,5 @@ void delete_borrow(){	//도서반납->대출연결리스트에서 삭제
 //	save_borrow();
 //	delete_borrow();
 	Admin();
-	}
+}
+*/
