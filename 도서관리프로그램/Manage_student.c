@@ -2,15 +2,21 @@
 #include <stdlib.h>
 #include <string.h>
 
-//#include "book.h"
+#include "borrow.h"
+#include "book.h"
 
-
+int withdraw();
 void signUp();
 void logIn();
 void SuccessLogin_menu();
 void student_free();
 void MainMenu();
 int FailLogin_menu();
+int borrow_confirm();
+void myBorrow_list();
+void Update_studentData();
+void st_InitNode();
+void Import_studentData();
 
 typedef struct student{
 	struct student* next;
@@ -23,6 +29,25 @@ typedef struct student{
 
 student* SThead;
 student* member;
+
+int main() {
+//	FILE* fp = fopen("student.txt", "w");
+//	fclose(fp);
+	//기본 셋팅(대여)
+	borrow_init();
+
+	//기본 셋팅(도서)
+	bk_init();
+	Book_load();
+
+	//기본 셋팅(학생)
+	st_InitNode();
+	Import_studentData();
+	
+	//시작메뉴
+	MainMenu();
+	return 0;
+}
 
 void st_InitNode() {
 	SThead = (student*)malloc(sizeof(student));
@@ -43,7 +68,7 @@ void Import_studentData() {
 			return;
 		ret = fscanf(stfp, "%s %s %s\n", tmp->stnum, tmp->passward, tmp->name);
 		if (ret == EOF) break;
-		printf("import");
+	//	printf("import");
 		tmp->next = SThead->next;
 		SThead->next = tmp;	
 		tmp = NULL;
@@ -59,24 +84,11 @@ void Update_studentData() {   //리스트에서 파일로 입력해주는 함수
 		tmp= tmp->next;
 		if(tmp == NULL) break;
 		fprintf(fp, "%s %s %s\n", tmp->stnum, tmp->passward, tmp->name);
-		printf("Update");
+	//	printf("Update");
 	}
 	fclose(fp);
 }
 
-
-int main() {
-//	Book_load();
-//	bk_init();
-
-	//기본 셋팅(학생)
-	st_InitNode();
-	Import_studentData();
-	
-	//시작메뉴
-	MainMenu();
-	return 0;
-}
 
 void MainMenu(){
 	int menu=0;
@@ -108,22 +120,28 @@ void signUp() {
 	if (newstudent == NULL || tmp == NULL)
 		return;
 	printf("학번 : ");
-	m=scanf("%s", newstudent->stnum); myflush();
+	m=scanf("%s", newstudent->stnum); //myflush();
+
 	printf("비밀번호 : ");
-	m=scanf("%s", newstudent->passward);myflush();
+	m=scanf("%s", newstudent->passward);//myflush();
 	printf("이름 : ");
 	m=scanf("%s", newstudent->name);
-	while(tmp->next != NULL){
+
+	while(1){
 		tmp=tmp->next;
-		if(newstudent->stnum == tmp->stnum){
+		if(tmp == NULL) break;
+		if(strcmp(newstudent->stnum, tmp->stnum) == 0){
 			printf("이미 가입된 학번입니다.\n");
+			free(newstudent);
+			newstudent = NULL;
 			return;
 		}
 	}
+
 	newstudent->next = SThead->next;
 	SThead->next = newstudent;
 	Update_studentData();
-	
+/*	
 	////////리스트 확인 코드/////////	
 	tmp = SThead;
 	while(tmp->next != NULL){
@@ -131,7 +149,7 @@ void signUp() {
 		printf("%s\n", tmp->stnum);
 	}
 	///////////////////////////////
-
+*/
 	tmp = NULL;
 	newstudent = NULL;
 }	
@@ -164,7 +182,8 @@ void logIn() {
 			else if ((strcmp(studentNUM, "admin")) == 0 && (strcmp(PW, "admin") == 0)) {
 			//관리자 모드
 					i = 0;	loginError = 0;
-//					Admin();
+					member = NULL;
+					Admin();
 					break;
 			}
 
@@ -201,7 +220,7 @@ void logIn() {
 
 int FailLogin_menu(){
 	int FLMenu;
-	printf("\
+	printf("\n\
 ERROR : 로그인 실패\n\
 1. 다시 로그인\n\
 2. 메인으로 돌아가기\n\
@@ -214,34 +233,98 @@ ERROR : 로그인 실패\n\
 
 
 void SuccessLogin_menu() {
-	int SLmenu, BookReturn;
-	printf("\n\
+	int SLmenu, BookReturn, wd;
+	while(1){
+		printf("\n\
 [목록]\n\
 1. 도서 검색\n\
 2. 내 대여 목록\n\
 3. 회원 탈퇴\n\
 4. 로그아웃\n\
-5. 프로그램 종료\n");
-	int m = scanf("%d", &SLmenu);
-	if (SLmenu == 1)
-//		BookReturn = Find_book();
-		;
-	else if (SLmenu == 2)
-		//내 대여 목록 찾는 함수 추가
-		;
-	else if (SLmenu == 3)
-		//회원 탈퇴 함수 추가(대출 목록에 이름 있으면 불가, 삭제 후 txt파일 업데이트)
-		Update_studentData();
-	else if (SLmenu == 4){
-		member = NULL;
-		return;
-	}
-	else if (SLmenu == 5){
-		student_free();
-		printf("====프로그램 종료====\n");
-		exit(0);
+5. 프로그램 종료\n\
+----------------------\n");
+		int m = scanf("%d", &SLmenu);
+		if (SLmenu == 1)
+			Find_book();
+		else if (SLmenu == 2)
+			myBorrow_list();
+		else if (SLmenu == 3){
+			wd = withdraw();
+			if(wd) //탈퇴 성공 -> 메인화면으로
+				return;
+			else if(!wd)
+				printf("!error! 탈퇴 실패 : 반납하지 않은 도서가 있습니다. 도서를 반납한 후 회원 탈퇴가 가능합니다.\n");
+		}
+		else if (SLmenu == 4){
+			member = NULL;
+			return;
+		}
+		else if (SLmenu == 5){
+			student_free();
+			printf("====프로그램 종료====\n\n");
+			exit(0);
+		}
 	}
 }
+
+//내 대여 목록 함수
+void myBorrow_list(){
+	int brnum=0;
+	borrow *brtmp = br_head;
+	Book *bktmp = Book_head;
+	while(1){
+		brtmp = brtmp->next;
+		if(brtmp == NULL) break;
+		//대출한 책이 있을 때
+		if(!strcmp(brtmp->num,member->stnum)){
+			//isbn 이용해서 책 이름 출력
+			while(1){
+				bktmp=bktmp->next;
+				if(bktmp == NULL) break;
+				if(!strcmp(bktmp->Book_ISBN, brtmp->isbn)){
+					printf("%s\n", bktmp->Book_name);
+					brnum++;
+				}
+			}
+		}
+	}
+	if(brnum)
+		printf("대출한 책의 수: %d\n", brnum);
+	else
+		printf("대출한 책이 없습니다.\n");
+}
+
+//회원 탈퇴 함수 ==> 대출목록 확인 후 회원 탈퇴
+int withdraw(){
+	int brconfirm;
+	brconfirm = borrow_confirm();
+	if(!brconfirm){
+		student *tmp = SThead;
+		while(tmp->next != member)
+			tmp=tmp->next;
+		tmp->next = member->next;
+		free(member);
+		member = NULL;
+		Update_studentData();
+		printf("--회원 탈퇴--\n");
+		return 1;
+	}
+	else
+		return 0;
+}
+
+
+//대출 확인
+int borrow_confirm(){
+	borrow *brtmp = br_head;
+	while(brtmp != NULL){
+		brtmp=brtmp->next;
+		if(brtmp==NULL) break;
+		if(strcmp(member->stnum,brtmp->num)==0) return 1;
+	}
+	return 0;
+}
+
 
 void student_free() {
 	student *tmp = SThead;
