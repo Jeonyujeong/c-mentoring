@@ -22,7 +22,7 @@ void Erase_enter(char *);
 void Login();
 void bk_init();
 void Load_list_to_file();
-int Admin_mode();
+char Admin_mode();
 void add_book();
 void remove_book();
 void borrow_book();
