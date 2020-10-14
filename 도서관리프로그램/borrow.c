@@ -124,15 +124,15 @@ void delete_borrow(){	//도서반납->대출연결리스트에서 삭제
 		return;
 
 	while(1){  //삭제할 노드 탐색
-		if(delnode->next==NULL){
-			printf("대출 정보를 찾을 수 없습니다.");
-           	return;
-		}
-		if(strcmp(node->num,delnode->num) == 0 && strcmp(node->isbn, delnode->isbn)==0){
+		if (strcmp(node->num,delnode->num) == 0 && strcmp(node->isbn, delnode->isbn)==0){
 			backnode=delnode->next;//노드삭제
 			free(delnode);
 			printf("반납되었습니다.");
 				return;
+		}
+		else if(delnode->next==NULL){
+			printf("대출 정보를 찾을 수 없습니다.");
+			return;
 		}
 		backnode=delnode;
 	    delnode=delnode->next;
