@@ -40,8 +40,8 @@ void bk_init(){                          // book 리스트 맨 처음부분 만�
 
 
 
-char Admin_mode(){                      //관리자 모드 출력 함수 ,선택 수 리턴
-	char choice;
+int Admin_mode(){                    //관리자 모드 출력 함수 ,선택 
+	int choice;
 	printf("\n[관리자 모드]\n");
 	printf("1. 도서 등록\n");
 	printf("2. 도서 삭제\n");
@@ -52,8 +52,8 @@ char Admin_mode(){                      //관리자 모드 출력 함수 ,선택
 	printf("7. 로그아웃\n");
 	printf("8.프로그램 종료\n");
 
-	scanf("%c",&choice);
-	getchar();
+
+	scanf("%d",&choice);
 	return choice;
 }
 
@@ -260,15 +260,13 @@ int Find_book(){        //[도서검색]창  ,번호 리턴
 	printf("4. 저자명 검색\n");
 	printf("5. 전체 검색\n");
 	printf("6. 이전 메뉴\n");
-	char num=0;
-	int check=scanf("%c",&num); 
-	getchar();
+	scanf("%d",&num); 
 
-	if(num=='1'){
+	if(num==1){
 		Search_book_name();
-	}else if(num=='2'){
+	}else if(num==2){
 		Search_book_company();
-	}else if(num=='3'){
+	}else if(num==3){
 		char isbn[Book_ISBN_size];
 
 		printf("ISBN: ");
@@ -280,12 +278,12 @@ int Find_book(){        //[도서검색]창  ,번호 리턴
 		}else{
 			Book_information(q);
 		}
-	}else if(num=='4'){
+	}else if(num==4){
 		Search_book_author();
 
-	}else if(num=='5'){
+	}else if(num==5){
 		books();
-	}else if(num=='6'){
+	}else if(num==6){
 		break;
 	}else{
 		printf("1~6사이의 수를 입력해 주십시오\n");
@@ -412,29 +410,28 @@ void Admin(){     //관리자모드
 
 		while(1){
 
-	char c_num=0;
+	int c_num=0;
 	c_num=Admin_mode();           ///문자 입력시 무한수열 이유...?
-
-	if(c_num=='1'){
+	if(c_num==1){
 		add_book();
 		Load_list_to_file();
-	}else if(c_num=='2'){
+	}else if(c_num==2){
 		remove_book();
 
-	}else if(c_num=='3'){
+	}else if(c_num==3){
 		add_borrowlist();
 		save_borrow();
-	}else if(c_num=='4'){
+	}else if(c_num==4){
 		delete_borrow();
-	}else if(c_num=='5'){
+	}else if(c_num==5){
 		Find_book();
 
-	}else if(c_num=='6'){
+	}else if(c_num==6){
 		//효원이 학생 연결리스트 불러오기
 
-	}else if(c_num=='7'){
+	}else if(c_num==7){
 	 //맨 처음 [도서관 서비스]로 이동
-	}else if(c_num=='8'){
+	}else if(c_num==8){
 		break;
 	}else{
 	  printf("1부터 8까지의 수 중 하나를 입력해 주십시오.\n");

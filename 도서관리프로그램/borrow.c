@@ -24,7 +24,7 @@ void borrow_init(){ //대출연결리스트 초기화 함수
 
 int confirm_stnum(char *st_num ){  // 존재하는 학번인지 확인하는 함수
 	student *cf_node;
-	cf_node=head;
+	cf_node=SThead;
 
 	while(1){
 		 if( cf_node  == NULL){
