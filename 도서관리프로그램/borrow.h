@@ -1,6 +1,7 @@
 typedef struct borrow{
-     int num[20];
-     int isbn[20];
+     char num[20];
+     char isbn[20];
+//int -> char 형 변환함
      struct borrow* next;
  }borrow;
  

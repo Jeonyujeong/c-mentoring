@@ -2,36 +2,16 @@
 #include <malloc.h>
 #include <string.h>
 #include "book.h"
+#include "student.h"
 #include "borrow.h"
+
 
 #define Book_name_size 100
 #define Book_company_size 30
 #define Book_ISBN_size 20
-#define Book_author_size 20
+#define Book_author_size 50
 
 
-
-void Login(){           //로그인창 함수
-
-	char Adminnum[]="admin";
-	char Adminpassword[]="admin";
-	char Num[20];
-	char Password[20];
-
-	printf("\n[로그인]\n");
-	printf("학번:");
-	scanf("%s",Num);
-	printf("비밀번호:");
-	scanf("%s",Password);
-
-	if(strcmp(Adminnum,Num)==0&&strcmp(Adminpassword,Password)==0){
-		Admin();
-	}else{
-		//학생 로그인 가능한지 확인...
-		printf("로그인에 실패했습니다.\n");
-	}
-
-}
 
 
 /*
@@ -60,7 +40,7 @@ void bk_init(){                          // book 리스트 맨 처음부분 만�
 
 
 
-int Admin_mode(){                      //관리자 모드 출력 함수 ,선택 수 리턴
+int Admin_mode(){                    //관리자 모드 출력 함수 ,선택 
 	int choice;
 	printf("\n[관리자 모드]\n");
 	printf("1. 도서 등록\n");
@@ -71,6 +51,7 @@ int Admin_mode(){                      //관리자 모드 출력 함수 ,선택 
 	printf("6. 회원 목록\n");
 	printf("7. 로그아웃\n");
 	printf("8.프로그램 종료\n");
+
 
 	scanf("%d",&choice);
 	return choice;
@@ -119,7 +100,9 @@ void add_book(){                 //도서 등록 함수
 void remove_book(){              // 도서 삭제 함수
 	char name[Book_name_size];
 	printf("도서명:");
-	scanf("%s",name);
+	getchar();
+	fgets(name, Book_name_size, stdin);
+	Erase_enter(name);
 	ttmp=Book_head->next;
 	ttmp_back=Book_head;
 	while(ttmp!=NULL&&strcmp(ttmp->Book_name,name)!=0){
@@ -219,7 +202,7 @@ void Load_list_to_file(){   //리스트에서 파일로 입력해주는 함수
 	FILE* fp= fopen("bk.txt","w");
 	ttmp=Book_head->next;
 	while(ttmp!=NULL){
-		fprintf(fp,"%s %s %s %s %c\n",ttmp->Book_name,ttmp->Book_company,ttmp->Book_author,ttmp->Book_ISBN,ttmp->Book_borrow);
+		fprintf(fp,"%s, %s, %s, %s, %c\n",ttmp->Book_name,ttmp->Book_company,ttmp->Book_author,ttmp->Book_ISBN,ttmp->Book_borrow);
 		ttmp=ttmp->next;
 	}
 	fclose(fp);
@@ -242,7 +225,7 @@ void Book_load(){                  //파일에서 링크드리스트로 만드�
 		Book *q=(Book *)malloc(sizeof(Book));
 		q->next=NULL;
 
-		ret=fscanf(fp,"%s %s %s %s %c",name,company,author,ISBN,&borrow);
+		ret=fscanf(fp,"%s, %s, %s, %s, %c",name,company,author,ISBN,&borrow);
 		if (ret==EOF)
 			break;
 		//printf("%s %s %s %s %c",name,company,author,ISBN,borrow);
@@ -267,7 +250,7 @@ void Book_load(){                  //파일에서 링크드리스트로 만드�
 
 int Find_book(){        //[도서검색]창  ,번호 리턴
 
-	int num;
+	int num=0;
 	while(1){
 
 	printf("\n[도서검색]\n");
@@ -277,7 +260,7 @@ int Find_book(){        //[도서검색]창  ,번호 리턴
 	printf("4. 저자명 검색\n");
 	printf("5. 전체 검색\n");
 	printf("6. 이전 메뉴\n");
-	scanf("%d",&num);
+	scanf("%d",&num); 
 
 	if(num==1){
 		Search_book_name();
@@ -304,6 +287,8 @@ int Find_book(){        //[도서검색]창  ,번호 리턴
 		break;
 	}else{
 		printf("1~6사이의 수를 입력해 주십시오\n");
+		fflush(stdin);
+		continue;
 	}
 	}
 }
@@ -427,7 +412,6 @@ void Admin(){     //관리자모드
 
 	int c_num=0;
 	c_num=Admin_mode();           ///문자 입력시 무한수열 이유...?
-
 	if(c_num==1){
 		add_book();
 		Load_list_to_file();
