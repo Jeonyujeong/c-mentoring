@@ -40,7 +40,7 @@ void bk_init(){                          // book 리스트 맨 처음부분 만�
 
 
 
-int Admin_mode(){                    //관리자 모드 출력 함수 ,선택 
+int Admin_mode(){                    //관리자 모드 출력 함수 ,선택
 	int choice;
 	printf("\n[관리자 모드]\n");
 	printf("1. 도서 등록\n");
@@ -225,7 +225,7 @@ void Book_load(){                  //파일에서 링크드리스트로 만드�
 		Book *q=(Book *)malloc(sizeof(Book));
 		q->next=NULL;
 
-		ret=fscanf(fp,"%s, %s, %s, %s, %c",name,company,author,ISBN,&borrow);
+		ret=fscanf(fp,"%[^,], %[^,], %[^,], %[^,], %c\n",name,company,author,ISBN,&borrow);
 		if (ret==EOF)
 			break;
 		//printf("%s %s %s %s %c",name,company,author,ISBN,borrow);
@@ -260,7 +260,7 @@ int Find_book(){        //[도서검색]창  ,번호 리턴
 	printf("4. 저자명 검색\n");
 	printf("5. 전체 검색\n");
 	printf("6. 이전 메뉴\n");
-	scanf("%d",&num); 
+	scanf("%d",&num);
 
 	if(num==1){
 		Search_book_name();
@@ -400,9 +400,8 @@ int Find_word(char *a,char *b){       //단어 찾기 함수
 void books(){
 	ttmp=Book_head->next;
 	while(ttmp!=NULL){
-		printf("%s %s %s %s %c\n",ttmp->Book_name,ttmp->Book_company,ttmp->Book_author,ttmp->Book_ISBN,ttmp->Book_borrow);
+		printf("%s, %s, %s, %s, %c\n",ttmp->Book_name,ttmp->Book_company,ttmp->Book_author,ttmp->Book_ISBN,ttmp->Book_borrow);
 		ttmp=ttmp->next;
-
 	}
 
 }
