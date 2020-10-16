@@ -77,7 +77,7 @@ void Import_studentData() {
 }
 
 
-void Update_studentData() {   //리스트에서 파일로 입력해주는 함수 
+void Update_studentData() {   //리스트->파일 입력 함수 
 	FILE* fp = fopen("student.txt", "w");
 	student* tmp = SThead;
 	while (1) {
@@ -141,15 +141,7 @@ void signUp() {
 	newstudent->next = SThead->next;
 	SThead->next = newstudent;
 	Update_studentData();
-/*	
-	////////리스트 확인 코드/////////	
-	tmp = SThead;
-	while(tmp->next != NULL){
-		tmp = tmp->next;
-		printf("%s\n", tmp->stnum);
-	}
-	///////////////////////////////
-*/
+
 	tmp = NULL;
 	newstudent = NULL;
 }	
@@ -200,18 +192,18 @@ void logIn() {
 // 로그인 실패시
 		if (loginError == 1){
 			FLMenu = FailLogin_menu();
-			if (FLMenu == 1)
-
+			if (FLMenu == 1)//다시 로그인
 				continue;
-			else if (FLMenu == 2)
+			else if (FLMenu == 2)//메인 메뉴로 돌아가기
 				return;
-			else if (FLMenu == 3) {
+			else if (FLMenu == 3)//회원가입 메뉴
+			{
 				signUp();
 				break;
 			}
 		}
 
-		else if (loginError == 0)
+		else if (loginError == 0)//메인으로 
 			return;
 	}
 }	
