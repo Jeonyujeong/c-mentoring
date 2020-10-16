@@ -43,7 +43,7 @@ int main() {
 	//기본 셋팅(학생)
 	st_InitNode();
 	Import_studentData();
-	
+
 	//시작메뉴
 	MainMenu();
 	return 0;
@@ -70,14 +70,18 @@ void Import_studentData() {
 		if (ret == EOF) break;
 	//	printf("import");
 		tmp->next = SThead->next;
-		SThead->next = tmp;	
+		SThead->next = tmp;
 		tmp = NULL;
 	}
 	fclose(stfp);
 }
 
 
+<<<<<<< HEAD
 void Update_studentData() {   //리스트->파일 입력 함수 
+=======
+void Update_studentData() {   //리스트에서 파일로 입력해주는 함수
+>>>>>>> 30f715436530b4be56b7d61c08037a68e5b4b07a
 	FILE* fp = fopen("student.txt", "w");
 	student* tmp = SThead;
 	while (1) {
@@ -144,7 +148,7 @@ void signUp() {
 
 	tmp = NULL;
 	newstudent = NULL;
-}	
+}
 
 // 로그인
 void logIn() {
@@ -161,7 +165,7 @@ void logIn() {
 
 		do {
 			member = member->next;
-			if (member == NULL) 
+			if (member == NULL)
 				break;
 
 			if ((strcmp(studentNUM, member->stnum)) == 0 && (strcmp(PW, member->passward) == 0)) {
@@ -206,7 +210,7 @@ void logIn() {
 		else if (loginError == 0)//메인으로 
 			return;
 	}
-}	
+}
 
 
 

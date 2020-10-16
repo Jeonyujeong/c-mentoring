@@ -21,3 +21,6 @@ typedef struct student{
 	char passward[20];
 	char name[20];
 }student;
+
+student* SThead;
+student* member;
